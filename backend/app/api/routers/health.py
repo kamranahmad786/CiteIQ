@@ -7,3 +7,12 @@ router = APIRouter(tags=["health"])
 def health():
     return {"status": "ok"}
 
+
+@router.get("/api")
+def api_index():
+    return {
+        "status": "ok",
+        "service": "CiteIQ API",
+        "docs": "/docs",
+        "health": "/health",
+    }
