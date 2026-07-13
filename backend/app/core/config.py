@@ -6,7 +6,11 @@ class Settings(BaseSettings):
     app_name: str = "Enterprise RAG Document Intelligence Platform"
     api_prefix: str = "/api"
     environment: str = "local"
-    cors_origins: list[str] = ["http://localhost:5173", "http://127.0.0.1:5173"]
+    cors_origins: list[str] = [
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
+        "https://cite-iq.vercel.app",
+    ]
     database_url: str = "postgresql+asyncpg://app:app@localhost:5432/app"
     jwt_secret: str = "replace-me-in-production"
     access_token_minutes: int = 15
@@ -20,4 +24,3 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings() -> Settings:
     return Settings()
-
