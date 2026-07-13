@@ -1,0 +1,10 @@
+[project]
+name = "enterprise-rag-api"
+version = "0.1.0"
+description = "FastAPI backend for an enterprise RAG document intelligence platform"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+

@@ -1,0 +1,47 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        ports: ["5432:5432"]
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: app
+          POSTGRES_DB: app_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Backend install
+        run: |
+          cd backend
+          pip install -r requirements.txt
+      - name: Backend tests
+        run: |
+          cd backend
+          pytest -q
+      - name: Frontend install
+        run: |
+          cd frontend
+          npm ci
+      - name: Frontend tests
+        run: |
+          cd frontend
+          npm run test -- --run
+      - name: Frontend build
+        run: |
+          cd frontend
+          npm run build
+
