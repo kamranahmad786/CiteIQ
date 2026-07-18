@@ -1960,14 +1960,16 @@ td small {
   display: grid;
   align-content: start;
   gap: 8px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .advanced-session-panel {
   position: sticky;
   top: 28px;
+  grid-template-rows: auto auto minmax(280px, 1fr) auto auto;
+  min-height: min(720px, calc(100vh - 150px));
   max-height: calc(100vh - 56px);
-  overflow: visible;
+  overflow: hidden;
   padding: 18px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -1983,11 +1985,12 @@ td small {
 
 .session-list {
   display: grid;
+  align-content: start;
   gap: 8px;
-  max-height: min(420px, calc(100vh - 410px));
-  min-height: 180px;
+  min-height: 0;
+  max-height: none;
   overflow-y: auto;
-  padding-right: 2px;
+  padding: 2px 4px 2px 0;
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
 }
@@ -2009,17 +2012,26 @@ td small {
   display: grid;
   gap: 4px;
   color: var(--ink);
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid var(--line);
+  background: var(--surface-soft);
   overflow: hidden;
+}
+
+.session-list button {
+  min-height: 64px;
+  align-content: center;
 }
 
 .session-panel button span,
 .session-panel button small {
+  display: block;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.3;
+  color: var(--ink);
+  opacity: 1;
 }
 
 .session-panel button small {
@@ -2043,6 +2055,7 @@ td small {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface-soft);
+  min-height: 104px;
 }
 
 .chat-guardrail-card svg {
@@ -3166,6 +3179,9 @@ summary {
 
   .advanced-session-panel {
     position: static;
+    min-height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .chat-inspector {
