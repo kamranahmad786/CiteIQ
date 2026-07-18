@@ -34,9 +34,9 @@ const demoSessions: ChatSession[] = [
   {
     id: "policy",
     title: "Policy Q&A",
-    detail: "HR Policies · 3 citations",
+    detail: "HR Policies · 3 sources",
     scope: "HR Policies",
-    mode: "Employee policy guidance",
+    mode: "Employee policy help",
     starters: [
       "How many casual leave days do employees receive?",
       "What leave rules apply to probation employees?",
@@ -47,7 +47,7 @@ const demoSessions: ChatSession[] = [
   {
     id: "contracts",
     title: "Contract review",
-    detail: "Legal space · vendor terms",
+    detail: "Legal group · vendor terms",
     scope: "Legal",
     mode: "Vendor contract review",
     starters: [
@@ -62,7 +62,7 @@ const demoSessions: ChatSession[] = [
     title: "Audit evidence",
     detail: "SOC 2 controls · ready",
     scope: "Engineering",
-    mode: "Control evidence discovery",
+    mode: "Control document search",
     starters: [
       "Which document mentions SOC 2 controls?",
       "What incident controls are documented?",
@@ -72,7 +72,7 @@ const demoSessions: ChatSession[] = [
   },
   {
     id: "finance",
-    title: "Finance SOP",
+    title: "Finance guide",
     detail: "Expense policy · reimbursements",
     scope: "Finance",
     mode: "Expense policy support",
@@ -80,12 +80,12 @@ const demoSessions: ChatSession[] = [
       "Summarise reimbursement rules for domestic travel.",
       "What travel expenses can employees claim?",
       "What is the hotel reimbursement rule?",
-      "Which finance SOP covers economy air travel?",
+      "Which finance guide covers economy air travel?",
     ],
   },
 ];
 
-const answerFilters = ["All spaces", "Current session", "High confidence", "Needs review"] as const;
+const answerFilters = ["All documents", "Current chat", "High confidence", "Needs review"] as const;
 type Feedback = "up" | "down";
 
 export function Chat() {
@@ -96,7 +96,7 @@ export function Chat() {
   const [question, setQuestion] = useState(demoSessions[0].starters[0]);
   const [sessionQuery, setSessionQuery] = useState("");
   const [messagesBySession, setMessagesBySession] = useState<Record<string, { question: string; answer: ChatAnswer }[]>>({});
-  const [assistantFilter, setAssistantFilter] = useState<(typeof answerFilters)[number]>("Current session");
+  const [assistantFilter, setAssistantFilter] = useState<(typeof answerFilters)[number]>("Current chat");
   const [copiedMessage, setCopiedMessage] = useState<string | null>(null);
   const [feedbackByMessage, setFeedbackByMessage] = useState<Record<string, Feedback>>({});
   const [loading, setLoading] = useState(false);
@@ -149,14 +149,14 @@ export function Chat() {
     <section className="content-grid chat-command">
       <section className="chat-hero">
         <div>
-          <span className="eyebrow">Grounded AI workspace</span>
-          <h2>Enterprise answer console</h2>
-          <p>Ask governed questions across authorised document spaces, inspect citations, and keep every answer audit-ready.</p>
+          <span className="eyebrow">Document chat</span>
+          <h2>Ask questions your team can trust</h2>
+          <p>Ask questions from the documents you can access, review the answer sources, and keep every response easy to verify.</p>
         </div>
           <div className="chat-hero-stats">
-            <span><ShieldCheck size={16} /> Evidence-only mode</span>
+            <span><ShieldCheck size={16} /> Uses company documents only</span>
             <strong>{citationCount}</strong>
-          <small>citations returned in {activeSession.title}</small>
+          <small>source links returned in {activeSession.title}</small>
         </div>
       </section>
 
@@ -165,26 +165,26 @@ export function Chat() {
           <div className="metric-card-top"><div className="metric-icon"><MessageSquareText size={20} /></div><small>Live</small></div>
           <span>Questions asked</span>
           <strong>{totalQuestions}</strong>
-          <small>Across conversation spaces</small>
+          <small>Across document chats</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><FileSearch size={20} /></div><small>Cited</small></div>
-          <span>Evidence snippets</span>
+          <div className="metric-card-top"><div className="metric-icon"><FileSearch size={20} /></div><small>Sources</small></div>
+          <span>Source sections</span>
           <strong>{citationCount}</strong>
-          <small>Source chunks attached</small>
+          <small>Document sections found</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><Clock3 size={20} /></div><small>Target</small></div>
-          <span>Answer latency</span>
+          <span>Answer speed</span>
           <strong>840ms</strong>
-          <small>P95 demo target</small>
+          <small>demo target</small>
         </article>
       </div>
 
       <section className="chat-inspector chat-inspector-strip">
         <section className="table-panel chat-mode-card">
           <div className="inspector-card-head">
-            <span className="eyebrow">Assistant command</span>
+            <span className="eyebrow">Assistant settings</span>
             <span className="live-pill"><span /> Live</span>
           </div>
           <h2>{activeSession.title}</h2>
@@ -196,12 +196,12 @@ export function Chat() {
                 {answerFilters.map((filter) => <option key={filter}>{filter}</option>)}
               </select>
             </label>
-            <span><CheckCircle2 size={15} /> Citations required</span>
+            <span><CheckCircle2 size={15} /> Sources required</span>
           </div>
           <div className="assistant-scope-card">
-            <small>Active filter</small>
+              <small>Active view</small>
             <strong>{assistantFilter}</strong>
-            <span>Scope: {activeSession.scope}</span>
+              <span>Group: {activeSession.scope}</span>
           </div>
         </section>
 
@@ -212,19 +212,19 @@ export function Chat() {
           </div>
           <h2>Retrieval checks</h2>
           <div className="check-list compact-check-list">
-            <span><CheckCircle2 size={17} /> Citation policy enforced</span>
-            <span><CheckCircle2 size={17} /> Authorised spaces only</span>
-            <span><CheckCircle2 size={17} /> Abstention fallback active</span>
+            <span><CheckCircle2 size={17} /> Source links required</span>
+            <span><CheckCircle2 size={17} /> Allowed documents only</span>
+            <span><CheckCircle2 size={17} /> Safe no-answer mode on</span>
             <span><Clock3 size={17} /> Human review queue ready</span>
           </div>
         </section>
 
         <section className="table-panel inspector-evidence-card">
           <div className="inspector-card-head">
-            <span className="eyebrow">Latest evidence</span>
+            <span className="eyebrow">Latest sources</span>
             <span className="count-pill">{latestAnswer?.citations.length ?? 0} sources</span>
           </div>
-          <h2>Source snapshot</h2>
+          <h2>Source preview</h2>
           {latestAnswer && latestAnswer.citations.length > 0 ? (
             <div className="settings-list compact-evidence-list">
               {latestAnswer.citations.slice(0, 3).map((citation) => (
@@ -244,8 +244,8 @@ export function Chat() {
         <aside className="session-panel advanced-session-panel">
           <div className="panel-heading">
             <div>
-              <span className="eyebrow">Sessions</span>
-              <h2>Conversation spaces</h2>
+              <span className="eyebrow">Chats</span>
+              <h2>Document chats</h2>
             </div>
           </div>
           <label className="global-search session-search">
@@ -273,8 +273,8 @@ export function Chat() {
           </div>
           <div className="chat-guardrail-card">
             <LockKeyhole size={18} />
-            <strong>Role-aware retrieval</strong>
-            <small>Only authorised document spaces are searched for each answer.</small>
+            <strong>Role-based access</strong>
+            <small>Only documents you are allowed to see are searched.</small>
           </div>
         </aside>
 
@@ -293,19 +293,19 @@ export function Chat() {
               <div className="empty-state chat-empty-state">
                 <FileSearch size={34} />
                 <h2>{activeSession.title}</h2>
-                <p>{activeSession.mode} in the {activeSession.scope} document space. Responses cite exact source chunks and abstain when evidence is missing.</p>
+                <p>{activeSession.mode} in the {activeSession.scope} document group. Answers include source links and say when the answer is not found.</p>
               </div>
             )}
             {messages.map((message, index) => (
               <article className="message advanced-message" key={`${message.question}-${index}`}>
                 <div className="bubble user">{message.question}</div>
                 <div className="bubble assistant">
-                  <div className="assistant-label"><Bot size={17} /> Grounded assistant</div>
+                  <div className="assistant-label"><Bot size={17} /> Document assistant</div>
                   <p>{message.answer.answer}</p>
                   <div className="answer-meta">
-                    <span><ShieldCheck size={15} /> grounded</span>
-                    <span>{message.answer.citations.length} citations</span>
-                    <span>top-k 5</span>
+                    <span><ShieldCheck size={15} /> from documents</span>
+                    <span>{message.answer.citations.length} sources</span>
+                    <span>best matches</span>
                   </div>
                   {message.answer.citations.length > 0 && (
                     <div className="citations citation-grid">
@@ -352,7 +352,7 @@ export function Chat() {
             <textarea
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
-              placeholder="Ask about policies, contracts, SOPs, controls, or operational procedures"
+              placeholder="Ask about policies, contracts, expenses, controls, or company procedures"
               rows={2}
             />
             <button className="primary" disabled={loading}>
@@ -374,7 +374,7 @@ function buildConversationSpaces(documents: DocumentRecord[]): ChatSession[] {
     title: document.title,
     detail: `${document.space} · ${document.source_filename}`,
     scope: document.space,
-    mode: "Uploaded document Q&A",
+    mode: "Uploaded document chat",
     starters: [
       `Summarise ${document.title}.`,
       `What are the key points in ${document.title}?`,

@@ -17,16 +17,16 @@ import {
 import { FormEvent, useState } from "react";
 
 const initialTickets = [
-  ["CIT-1042", "Citation mismatch review", "Quality", "P2", "In progress"],
-  ["CIT-1037", "Bulk ingestion validation", "Documents", "P3", "Waiting"],
-  ["CIT-1029", "RBAC policy question", "Security", "P2", "Resolved"],
+  ["CIT-1042", "Source link review", "Quality", "P2", "In progress"],
+  ["CIT-1037", "Bulk upload check", "Documents", "P3", "Waiting"],
+  ["CIT-1029", "Access rule question", "Security", "P2", "Resolved"],
 ] as const;
 
 const helpTopics = [
-  ["Document upload and ingestion", "Chunking, metadata, supported formats", LifeBuoy],
-  ["Citation quality and abstentions", "Grounding, evidence checks, answer review", MessageCircleQuestion],
+  ["Document upload", "Supported formats and upload checks", LifeBuoy],
+  ["Source quality", "Source links, answer review, and missing answers", MessageCircleQuestion],
   ["Deployment with Docker and Compose", "Local services, environment variables", BookOpen],
-  ["Provider key configuration", "Model, embedding, and vector settings", Mail],
+  ["AI key setup", "Model and search settings", Mail],
 ] as const;
 
 export function Support() {
@@ -55,13 +55,13 @@ export function Support() {
     <section className="content-grid support-command">
       <section className="support-hero">
         <div>
-          <span className="eyebrow">Enterprise support center</span>
+          <span className="eyebrow">Support center</span>
           <h2>CiteIQ service desk</h2>
-          <p>Track support cases, monitor platform readiness, find implementation help, and escalate production issues from one support workspace.</p>
+          <p>Track support cases, check service readiness, find setup help, and raise urgent production issues from one place.</p>
         </div>
         <div className="support-hero-actions">
           <button className="primary" type="button" onClick={() => setShowTicketForm((current) => !current)}><Ticket size={18} /> Open ticket</button>
-          <button className="ghost-action" type="button" onClick={escalateP1}><PhoneCall size={17} /> Escalate P1</button>
+          <button className="ghost-action" type="button" onClick={escalateP1}><PhoneCall size={17} /> Urgent help</button>
         </div>
       </section>
 
@@ -85,10 +85,10 @@ export function Support() {
           <small>{supportStatus}</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><Clock3 size={20} /></div><small>SLA</small></div>
-          <span>First response</span>
+          <div className="metric-card-top"><div className="metric-icon"><Clock3 size={20} /></div><small>Target</small></div>
+          <span>First reply</span>
           <strong>18m</strong>
-          <small>target under 30m</small>
+          <small>target under 30 min</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><CheckCircle2 size={20} /></div><small>Healthy</small></div>
@@ -109,7 +109,7 @@ export function Support() {
           <section className="table-panel">
             <div className="panel-heading">
               <div>
-                <span className="eyebrow">Case management</span>
+                <span className="eyebrow">Cases</span>
                 <h2>Support queue</h2>
               </div>
               <span className="count-pill">{tickets.length} active</span>
@@ -138,7 +138,7 @@ export function Support() {
 
           <section className="support-grid">
             <section className="table-panel">
-              <span className="eyebrow">Knowledge base</span>
+                <span className="eyebrow">Help center</span>
               <h2>Help topics</h2>
               <div className="support-topic-grid">
                 {helpTopics.map(([title, detail, Icon]) => (
@@ -155,10 +155,10 @@ export function Support() {
               <span className="eyebrow">System status</span>
               <h2>Service readiness</h2>
               <div className="check-list">
-                <span><CheckCircle2 size={17} /> API healthy</span>
+                <span><CheckCircle2 size={17} /> Backend healthy</span>
                 <span><CheckCircle2 size={17} /> Frontend build passing</span>
-                <span><CheckCircle2 size={17} /> Seed corpus available</span>
-                <span><CheckCircle2 size={17} /> Local RAG checks passing</span>
+                <span><CheckCircle2 size={17} /> Sample documents available</span>
+                <span><CheckCircle2 size={17} /> Document answer checks passing</span>
               </div>
             </section>
           </section>
@@ -166,12 +166,12 @@ export function Support() {
 
         <aside className="support-side">
           <section className="table-panel">
-            <span className="eyebrow">Escalation path</span>
-            <h2>Production response</h2>
+            <span className="eyebrow">Urgent help</span>
+            <h2>Response path</h2>
             <div className="support-escalation">
               <span><AlertCircle size={17} /><strong>P1 outage</strong><small>Immediate incident bridge and platform owner page</small></span>
               <span><Clock3 size={17} /><strong>P2 degraded</strong><small>30 minute response, same-day mitigation plan</small></span>
-              <span><Rocket size={17} /><strong>Implementation help</strong><small>Architecture, ingestion, and deployment guidance</small></span>
+              <span><Rocket size={17} /><strong>Setup help</strong><small>Architecture, upload, and deployment guidance</small></span>
             </div>
           </section>
 
@@ -180,7 +180,7 @@ export function Support() {
             <h2>Contact options</h2>
             <div className="admin-actions-list">
               <button type="button"><Mail size={17} /> Email support</button>
-              <button type="button"><MessageCircleQuestion size={17} /> Start workspace chat</button>
+              <button type="button"><MessageCircleQuestion size={17} /> Start team chat</button>
               <button type="button"><BookOpen size={17} /> Open documentation</button>
             </div>
           </section>
@@ -190,8 +190,8 @@ export function Support() {
             <h2>Support guardrails</h2>
             <div className="settings-list">
               <span><strong><ShieldCheck size={17} /> Secure handling</strong><small>No secrets or customer data required in tickets</small></span>
-              <span><strong><FileText size={17} /> Evidence capture</strong><small>Attach request ID, document title, and citation ID</small></span>
-              <span><strong><LifeBuoy size={17} /> Guided triage</strong><small>Support routes issues to ingestion, retrieval, or access owners</small></span>
+              <span><strong><FileText size={17} /> Details capture</strong><small>Attach request ID, document title, and source link ID</small></span>
+              <span><strong><LifeBuoy size={17} /> Guided routing</strong><small>Support routes issues to upload, search, or access owners</small></span>
             </div>
           </section>
         </aside>

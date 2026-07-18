@@ -78,25 +78,25 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
           </div>
         </div>
         <div className="auth-copy">
-          <span className="eyebrow">Enterprise RAG Intelligence</span>
+          <span className="eyebrow">Enterprise Document Intelligence</span>
           <h1>Answers your teams can trust.</h1>
-          <p>Upload internal documents, ask natural-language questions, and get grounded answers with source citations, access controls, and audit-ready workflows.</p>
+          <p>Upload internal documents, ask questions in simple language, and get trusted answers with clear source references and secure team access.</p>
         </div>
         <div className="auth-metrics">
-          <span><strong>96%</strong><small>citation coverage</small></span>
-          <span><strong>840ms</strong><small>p95 answer latency</small></span>
-          <span><strong>4</strong><small>spaces indexed</small></span>
+          <span><strong>96%</strong><small>source accuracy</small></span>
+          <span><strong>840ms</strong><small>answer speed</small></span>
+          <span><strong>4</strong><small>document groups</small></span>
         </div>
         <div className="auth-points">
-          <span><CheckCircle2 size={16} /> Evidence-only answers</span>
-          <span><CheckCircle2 size={16} /> Role-aware access</span>
-          <span><CheckCircle2 size={16} /> Audit-ready citations</span>
+          <span><CheckCircle2 size={16} /> Answers from your files</span>
+          <span><CheckCircle2 size={16} /> Access based on role</span>
+          <span><CheckCircle2 size={16} /> Clear source references</span>
         </div>
       </section>
       <section className="auth-card">
         <div className="auth-card-head">
           <span><ShieldCheck size={18} /> Secure workspace access</span>
-          <small>{mode === "login" ? "Use the demo account or your workspace login." : "Create a local demo workspace user."}</small>
+          <small>{mode === "login" ? "Use the demo account or your company login." : "Create a demo company user."}</small>
         </div>
         <div className="auth-tabs">
           <button type="button" className={mode === "login" ? "active" : ""} onClick={() => switchMode("login")}>Login</button>

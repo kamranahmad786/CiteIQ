@@ -56,19 +56,19 @@ const manageNav = [
 ];
 
 const globalSearchItems = [
-  { label: "Upload a document", detail: "Open ingestion workbench", view: "documents" as const, type: "Document" },
-  { label: "Ask policy questions", detail: "Open grounded chat", view: "chat" as const, type: "Assistant" },
-  { label: "Review citation coverage", detail: "Open analytics", view: "analytics" as const, type: "Analytics" },
-  { label: "Manage users and roles", detail: "Open admin control plane", view: "admin" as const, type: "Admin" },
-  { label: "Check vector index", detail: "Open pgvector status", view: "vector-index" as const, type: "Resource" },
-  { label: "Open support desk", detail: "Tickets and escalation", view: "support" as const, type: "Support" },
+  { label: "Upload a document", detail: "Open upload center", view: "documents" as const, type: "Document" },
+  { label: "Ask a document question", detail: "Open document chat", view: "chat" as const, type: "Assistant" },
+  { label: "Review answer quality", detail: "Open reports", view: "analytics" as const, type: "Reports" },
+  { label: "Manage users and access", detail: "Open admin center", view: "admin" as const, type: "Admin" },
+  { label: "Check search setup", detail: "Open search health", view: "vector-index" as const, type: "System" },
+  { label: "Open support center", detail: "Tickets and urgent help", view: "support" as const, type: "Support" },
 ];
 
 const fallbackNotifications: NotificationRecord[] = [
   {
     id: "fallback-citation-coverage",
-    title: "Citation coverage healthy",
-    detail: "96% cited answer coverage across 4 spaces",
+    title: "Source accuracy is healthy",
+    detail: "96% of answers include source references across 4 document groups",
     level: "Ready",
     category: "Quality",
     created_at: new Date().toISOString(),
@@ -77,7 +77,7 @@ const fallbackNotifications: NotificationRecord[] = [
   },
   {
     id: "fallback-retention-review",
-    title: "Retention review pending",
+    title: "Document review is due",
     detail: "Vendor Contract Template review due soon",
     level: "Watch",
     category: "Governance",
@@ -87,8 +87,8 @@ const fallbackNotifications: NotificationRecord[] = [
   },
   {
     id: "fallback-role-sync",
-    title: "Role sync available",
-    detail: "Admin roles can be refreshed from workspace policy",
+    title: "Access roles can be refreshed",
+    detail: "User access can be updated from workspace rules",
     level: "Action",
     category: "Admin",
     created_at: new Date().toISOString(),
@@ -230,12 +230,12 @@ export function App() {
           </div>
           <div>
             <strong>CiteIQ</strong>
-            <span>Enterprise RAG Intelligence</span>
+            <span>Enterprise Document Intelligence</span>
           </div>
         </div>
         <div className="workspace-meta">
           <span>Production</span>
-          <small>4 spaces indexed</small>
+          <small>4 document groups ready</small>
         </div>
         <nav className="sidebar-nav" aria-label="Product navigation">
           <div className="nav-section">
@@ -266,8 +266,8 @@ export function App() {
             <span className="nav-section-title">Resources</span>
             <button className={view === "vector-index" ? "active" : ""} onClick={() => setView("vector-index")}>
               <Database size={18} />
-              <span>Vector index</span>
-              <small>pgvector</small>
+              <span>Search health</span>
+              <small>ready</small>
             </button>
             <button className={view === "settings" ? "active" : ""} onClick={() => setView("settings")}>
               <Settings size={18} />
@@ -277,11 +277,11 @@ export function App() {
         </nav>
         <div className="sidebar-card">
           <div>
-            <span className="sidebar-card-label">Index health</span>
-            <strong>96% cited coverage</strong>
+            <span className="sidebar-card-label">Search health</span>
+            <strong>96% source accuracy</strong>
           </div>
           <div className="usage-meter"><span /></div>
-          <small>4 document spaces ready</small>
+          <small>4 document groups ready</small>
         </div>
         <button className="upload-shortcut" onClick={() => setView("documents")}>
           <Upload size={18} />
@@ -333,7 +333,7 @@ export function App() {
           <div>
             <span className="eyebrow">CiteIQ Workspace · Production</span>
             <h1>{viewLabel(view)}</h1>
-            <p>Secure document search, grounded answers, and citations for enterprise teams.</p>
+            <p>Search company documents, get trusted answers, and see the source behind every response.</p>
           </div>
           <div className="top-actions">
             <div
@@ -350,14 +350,14 @@ export function App() {
                     setShowSearch(true);
                   }}
                   onFocus={() => setShowSearch(true)}
-                  placeholder="Search docs, chats, users, settings"
+                  placeholder="Search documents, chats, users, settings"
                 />
                 <span><Command size={13} /> K</span>
               </label>
               {showSearch && (
                 <div className="top-popover search-popover">
                   <div className="popover-heading">
-                    <strong>Command search</strong>
+                    <strong>Quick search</strong>
                     <small>{filteredSearchItems.length} results</small>
                   </div>
                   {filteredSearchItems.map((item) => (
@@ -392,7 +392,7 @@ export function App() {
                   <div className="popover-heading">
                     <div>
                       <strong>Notifications</strong>
-                      <small className={`stream-status ${notificationStreamStatus}`}>{notificationStreamStatus === "live" ? "Live stream active" : notificationStreamStatus === "connecting" ? "Connecting" : "Offline fallback"}</small>
+                      <small className={`stream-status ${notificationStreamStatus}`}>{notificationStreamStatus === "live" ? "Live updates on" : notificationStreamStatus === "connecting" ? "Connecting" : "Offline mode"}</small>
                     </div>
                     <button className="popover-link-button" type="button" onClick={clearRead} disabled={!notifications.some((item) => item.read)}>
                       Clear read
@@ -448,7 +448,7 @@ export function App() {
                     <span>{initials(auth.user.name)}</span>
                     <div>
                       <strong>{auth.user.name}</strong>
-                      <small>{auth.user.roles.join(" · ")}</small>
+                    <small>{auth.user.roles.map((role) => role.replaceAll("_", " ")).join(" · ")}</small>
                     </div>
                   </div>
                   <button type="button" onClick={() => openView("admin")}><UserRound size={16} /> Profile and roles</button>
@@ -490,7 +490,7 @@ function viewLabel(view: View) {
     chat: "Ask documents",
     analytics: "Analytics",
     admin: "Admin",
-    "vector-index": "Vector index",
+    "vector-index": "Search health",
     settings: "Settings",
     support: "Support",
   }[view];

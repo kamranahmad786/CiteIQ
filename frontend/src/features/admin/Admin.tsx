@@ -24,10 +24,10 @@ const initialUsers = [
 ] as const;
 
 const auditEvents = [
-  ["admin@citeiq.test", "document.uploaded", "Leave Policy 2026", "2m ago"],
-  ["legal@citeiq.test", "document.archived", "Vendor Contract Template", "18m ago"],
-  ["auditor@citeiq.test", "chat.evidence.reviewed", "SOC 2 session", "41m ago"],
-  ["admin@citeiq.test", "role.updated", "finance@citeiq.test", "1h ago"],
+  ["admin@citeiq.test", "uploaded document", "Leave Policy 2026", "2m ago"],
+  ["legal@citeiq.test", "archived document", "Vendor Contract Template", "18m ago"],
+  ["auditor@citeiq.test", "reviewed answer sources", "SOC 2 session", "41m ago"],
+  ["admin@citeiq.test", "updated role", "finance@citeiq.test", "1h ago"],
 ] as const;
 
 export function Admin() {
@@ -36,29 +36,29 @@ export function Admin() {
   const [showInvite, setShowInvite] = useState(false);
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviteRole, setInviteRole] = useState("Knowledge editor");
-  const [syncStatus, setSyncStatus] = useState("Ready to sync workspace roles");
+  const [syncStatus, setSyncStatus] = useState("Ready to update team access roles");
 
   function inviteUser(event: FormEvent) {
     event.preventDefault();
     if (!inviteEmail.trim()) return;
     setUsers((current) => [[inviteEmail.trim(), inviteRole, "CiteIQ Workspace", "Invited"], ...current]);
-    setAuditItems((current) => [["admin@citeiq.test", "user.invited", inviteEmail.trim(), "now"], ...current]);
+    setAuditItems((current) => [["admin@citeiq.test", "invited user", inviteEmail.trim(), "now"], ...current]);
     setInviteEmail("");
     setShowInvite(false);
   }
 
   function syncRoles() {
-    setSyncStatus("Roles synced just now");
-    setAuditItems((current) => [["admin@citeiq.test", "roles.synced", "CiteIQ Workspace", "now"], ...current]);
+    setSyncStatus("Access roles updated just now");
+    setAuditItems((current) => [["admin@citeiq.test", "updated access roles", "CiteIQ Workspace", "now"], ...current]);
   }
 
   return (
     <section className="content-grid admin-command">
       <section className="admin-hero">
         <div>
-          <span className="eyebrow">Workspace administration</span>
-          <h2>Enterprise control plane</h2>
-          <p>Manage users, roles, security posture, audit trails, and retrieval governance from one production-ready admin surface.</p>
+          <span className="eyebrow">Admin center</span>
+          <h2>User and access management</h2>
+          <p>Manage team members, roles, security checks, activity history, and document access from one simple admin page.</p>
         </div>
         <div className="admin-hero-actions">
           <button className="primary" type="button" onClick={() => setShowInvite((current) => !current)}><UserPlus size={18} /> Invite user</button>
@@ -83,25 +83,25 @@ export function Admin() {
           <div className="metric-card-top"><div className="metric-icon"><Users size={20} /></div><small>Active</small></div>
           <span>Workspace users</span>
           <strong>24</strong>
-          <small>4 privileged roles</small>
+          <small>4 admin-level roles</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><ShieldCheck size={20} /></div><small>Protected</small></div>
           <span>Security posture</span>
           <strong>98%</strong>
-          <small>MFA and RBAC healthy</small>
+          <small>login and access rules healthy</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><Activity size={20} /></div><small>Logged</small></div>
-          <span>Audit events</span>
+          <span>Activity records</span>
           <strong>1.2k</strong>
           <small>last 30 days</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><Database size={20} /></div><small>Scoped</small></div>
-          <span>Data spaces</span>
+          <div className="metric-card-top"><div className="metric-icon"><Database size={20} /></div><small>Protected</small></div>
+          <span>Document groups</span>
           <strong>4</strong>
-          <small>RLS-ready boundaries</small>
+          <small>team access boundaries</small>
         </article>
       </div>
 
@@ -139,7 +139,7 @@ export function Admin() {
 
           <section className="admin-grid">
             <section className="table-panel">
-              <span className="eyebrow">Audit trail</span>
+              <span className="eyebrow">Activity history</span>
               <h2>Recent admin activity</h2>
               <div className="admin-timeline">
                 {auditItems.map(([actor, action, entity, time]) => (
@@ -153,13 +153,13 @@ export function Admin() {
             </section>
 
             <section className="table-panel">
-              <span className="eyebrow">Policy engine</span>
+              <span className="eyebrow">Security rules</span>
               <h2>Security controls</h2>
               <div className="check-list">
-                <span><CheckCircle2 size={17} /> Short-lived JWT access tokens</span>
-                <span><CheckCircle2 size={17} /> Rotating refresh-token lineage</span>
-                <span><CheckCircle2 size={17} /> Application RBAC boundaries</span>
-                <span><CheckCircle2 size={17} /> Retrieval audit logging enabled</span>
+                <span><CheckCircle2 size={17} /> Short session tokens</span>
+                <span><CheckCircle2 size={17} /> Login refresh protection</span>
+                <span><CheckCircle2 size={17} /> Role-based access boundaries</span>
+                <span><CheckCircle2 size={17} /> Document question history enabled</span>
               </div>
             </section>
           </section>
@@ -167,22 +167,22 @@ export function Admin() {
 
         <aside className="admin-side">
           <section className="table-panel">
-            <span className="eyebrow">Security posture</span>
+            <span className="eyebrow">Security health</span>
             <h2>Control readiness</h2>
             <div className="settings-list">
-              <span><strong><LockKeyhole size={17} /> Authentication</strong><small>MFA policy ready, session timeout enforced</small></span>
-              <span><strong><KeyRound size={17} /> Key rotation</strong><small>JWT secret rotation window configured</small></span>
-              <span><strong><Fingerprint size={17} /> Audit identity</strong><small>Actor attribution recorded for admin actions</small></span>
+              <span><strong><LockKeyhole size={17} /> Login security</strong><small>Extra login protection ready, session timeout enforced</small></span>
+              <span><strong><KeyRound size={17} /> Secret rotation</strong><small>Security key update window configured</small></span>
+              <span><strong><Fingerprint size={17} /> Activity identity</strong><small>Admin actions record who made the change</small></span>
             </div>
           </section>
 
           <section className="table-panel">
-              <span className="eyebrow">Workspace guardrails</span>
-              <h2>Operational controls</h2>
+              <span className="eyebrow">Workspace rules</span>
+              <h2>Admin actions</h2>
               <p className="empty">{syncStatus}</p>
             <div className="admin-actions-list">
-              <button type="button"><SlidersHorizontal size={17} /> Configure RBAC</button>
-              <button type="button"><Database size={17} /> Manage data spaces</button>
+              <button type="button"><SlidersHorizontal size={17} /> Configure access rules</button>
+              <button type="button"><Database size={17} /> Manage document groups</button>
               <button type="button"><ShieldCheck size={17} /> Review security baseline</button>
             </div>
           </section>
@@ -192,7 +192,7 @@ export function Admin() {
             <h2>Admin queue</h2>
             <div className="risk-list">
               <div className="risk-row"><AlertTriangle size={18} /><div><strong>Auditor access review</strong><small>Review all-space access before demo</small></div><span className="risk-pill warn">Open</span></div>
-              <div className="risk-row"><CheckCircle2 size={18} /><div><strong>Production workspace</strong><small>Core controls are ready</small></div><span className="risk-pill">Ready</span></div>
+              <div className="risk-row"><CheckCircle2 size={18} /><div><strong>Production company account</strong><small>Core checks are ready</small></div><span className="risk-pill">Ready</span></div>
             </div>
           </section>
         </aside>

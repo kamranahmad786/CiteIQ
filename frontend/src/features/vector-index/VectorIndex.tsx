@@ -41,31 +41,31 @@ export function VectorIndex() {
   const averageRecall = Math.round(partitions.reduce((total, partition) => total + partition.recall, 0) / partitions.length);
 
   function rebuildCorpus() {
-    setStatus("Rebuild completed just now");
-    setLastAction("Corpus rebuilt");
+    setStatus("Search data refreshed just now");
+    setLastAction("Search refreshed");
     setPartitions((current) => current.map((partition) => ({ ...partition, recall: Math.min(99, partition.recall + 2), status: "ready" })));
   }
 
   function syncMetadata() {
-    setStatus("Metadata synced with document library");
-    setLastAction("Metadata sync");
+    setStatus("Document details synced with library");
+    setLastAction("Details synced");
   }
 
   function flushCache() {
-    setStatus("Query cache flushed");
-    setLastAction("Cache cleared");
+    setStatus("Saved search results cleared");
+    setLastAction("Search cache cleared");
     setTestResults([]);
   }
 
   function runRetrievalTest(event: FormEvent) {
     event.preventDefault();
     if (!query.trim()) return;
-    setLastAction("Retrieval test");
-    setStatus(`Test query completed for ${selectedSpace}`);
+    setLastAction("Search test");
+    setStatus(`Test search completed for ${selectedSpace}`);
     setTestResults([
-      `${selectedSpace === "All spaces" ? "Legal" : selectedSpace}: matched "${query.trim()}" with cosine score 0.91`,
-      "Top chunk has authorised version metadata and citation payload",
-      "Hybrid reranker confirmed keyword overlap",
+      `${selectedSpace === "All spaces" ? "Legal" : selectedSpace}: found a strong match for "${query.trim()}"`,
+      "Best document section includes source details",
+      "Keyword match confirmed important terms",
     ]);
   }
 
@@ -73,40 +73,40 @@ export function VectorIndex() {
     <section className="content-grid vector-command">
       <section className="vector-hero">
         <div>
-          <span className="eyebrow">Vector operations</span>
-          <h2>Retrieval index control plane</h2>
-          <p>Monitor pgvector health, rebuild embeddings, validate recall, and manage authorised retrieval partitions across document spaces.</p>
+          <span className="eyebrow">Search operations</span>
+          <h2>Search health center</h2>
+          <p>Check document search health, refresh searchable data, test search accuracy, and manage document groups.</p>
         </div>
         <div className="vector-hero-actions">
-          <button className="primary" type="button" onClick={rebuildCorpus}><RefreshCw size={18} /> Rebuild corpus</button>
-          <button className="ghost-action" type="button" onClick={syncMetadata}><RotateCw size={17} /> Sync metadata</button>
+          <button className="primary" type="button" onClick={rebuildCorpus}><RefreshCw size={18} /> Refresh search</button>
+          <button className="ghost-action" type="button" onClick={syncMetadata}><RotateCw size={17} /> Sync details</button>
         </div>
       </section>
 
       <div className="metric-row compact-metrics">
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><Layers3 size={20} /></div><small>Indexed</small></div>
-          <span>Indexed chunks</span>
+          <div className="metric-card-top"><div className="metric-icon"><Layers3 size={20} /></div><small>Ready</small></div>
+          <span>Searchable sections</span>
           <strong>{totalChunks}</strong>
-          <small>Across {partitions.length} spaces</small>
+          <small>Across {partitions.length} document groups</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><Database size={20} /></div><small>Schema</small></div>
-          <span>Embedding dims</span>
-          <strong>1536</strong>
-          <small>Provider-ready schema</small>
+          <div className="metric-card-top"><div className="metric-icon"><Database size={20} /></div><small>Setup</small></div>
+          <span>Search model</span>
+          <strong>Ready</strong>
+          <small>prepared for AI search</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><Gauge size={20} /></div><small>Recall</small></div>
-          <span>Average recall</span>
+          <div className="metric-card-top"><div className="metric-icon"><Gauge size={20} /></div><small>Accuracy</small></div>
+          <span>Search accuracy</span>
           <strong>{averageRecall}%</strong>
-          <small>hybrid retrieval checks</small>
+          <small>test checks</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><Zap size={20} /></div><small>Mode</small></div>
-          <span>Index type</span>
-          <strong>HNSW</strong>
-          <small>cosine distance</small>
+          <span>Search mode</span>
+          <strong>Fast</strong>
+          <small>best-match search</small>
         </article>
       </div>
 
@@ -115,8 +115,8 @@ export function VectorIndex() {
           <section className="table-panel">
             <div className="panel-heading">
               <div>
-                <span className="eyebrow">Partitions</span>
-                <h2>Index space health</h2>
+                <span className="eyebrow">Document groups</span>
+                <h2>Search group health</h2>
               </div>
               <span className="count-pill">{visiblePartitions.length} visible</span>
             </div>
@@ -129,10 +129,10 @@ export function VectorIndex() {
             <table>
               <thead>
                 <tr>
-                  <th>Space</th>
+                  <th>Group</th>
                   <th>Documents</th>
-                  <th>Chunks</th>
-                  <th>Recall</th>
+                  <th>Sections</th>
+                  <th>Accuracy</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -151,17 +151,17 @@ export function VectorIndex() {
           </section>
 
           <section className="table-panel">
-            <span className="eyebrow">Retrieval lab</span>
-            <h2>Test query path</h2>
+            <span className="eyebrow">Search test</span>
+            <h2>Try a test question</h2>
             <form className="vector-test-form" onSubmit={runRetrievalTest}>
               <label className="global-search document-search">
                 <Search size={17} />
-                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Run a retrieval test query" />
+                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Run a search test question" />
               </label>
               <button className="primary" type="submit"><PlayCircle size={18} /> Run test</button>
             </form>
             <div className="settings-list">
-              {testResults.length > 0 ? testResults.map((result) => <span key={result}><strong>{result}</strong></span>) : <span><strong>No retrieval test run yet</strong><small>Submit a query to validate embeddings, metadata filters, and reranking.</small></span>}
+              {testResults.length > 0 ? testResults.map((result) => <span key={result}><strong>{result}</strong></span>) : <span><strong>No search test run yet</strong><small>Submit a question to check source matching, document details, and ranking.</small></span>}
             </div>
           </section>
         </div>
@@ -169,33 +169,33 @@ export function VectorIndex() {
         <aside className="vector-side">
           <section className="table-panel">
             <span className="eyebrow">Operations</span>
-            <h2>Index controls</h2>
+            <h2>Search controls</h2>
             <div className="admin-actions-list">
-              <button type="button" onClick={rebuildCorpus}><RefreshCw size={17} /> Rebuild corpus</button>
-              <button type="button" onClick={syncMetadata}><RotateCw size={17} /> Sync metadata</button>
-              <button type="button" onClick={flushCache}><Eraser size={17} /> Flush query cache</button>
+              <button type="button" onClick={rebuildCorpus}><RefreshCw size={17} /> Refresh search</button>
+              <button type="button" onClick={syncMetadata}><RotateCw size={17} /> Sync document details</button>
+              <button type="button" onClick={flushCache}><Eraser size={17} /> Clear saved results</button>
             </div>
             <p className="action-note">{status}</p>
           </section>
 
           <section className="table-panel">
-            <span className="eyebrow">pgvector</span>
-            <h2>Configuration</h2>
+            <span className="eyebrow">Setup</span>
+            <h2>Search configuration</h2>
             <div className="settings-list">
-              <span><strong><SlidersHorizontal size={17} /> Distance metric</strong><small>Cosine similarity</small></span>
-              <span><strong><ServerCog size={17} /> Index type</strong><small>HNSW vector_cosine_ops</small></span>
-              <span><strong><Activity size={17} /> Hybrid retrieval</strong><small>Vector ranking with keyword overlap</small></span>
-              <span><strong><ShieldCheck size={17} /> Filtering</strong><small>Authorised document versions only</small></span>
+              <span><strong><SlidersHorizontal size={17} /> Match method</strong><small>Best meaning match</small></span>
+              <span><strong><ServerCog size={17} /> Search type</strong><small>Fast document search</small></span>
+              <span><strong><Activity size={17} /> Keyword support</strong><small>Meaning match plus keyword match</small></span>
+              <span><strong><ShieldCheck size={17} /> Access filter</strong><small>Allowed documents only</small></span>
             </div>
           </section>
 
           <section className="table-panel">
-            <span className="eyebrow">Runbook</span>
+            <span className="eyebrow">Checklist</span>
             <h2>Readiness checks</h2>
             <div className="check-list">
-              <span><CheckCircle2 size={17} /> Local deterministic provider active</span>
-              <span><CheckCircle2 size={17} /> Version filters attached</span>
-              <span><CheckCircle2 size={17} /> Metadata sync available</span>
+              <span><CheckCircle2 size={17} /> Local demo search active</span>
+              <span><CheckCircle2 size={17} /> Version checks attached</span>
+              <span><CheckCircle2 size={17} /> Document detail sync available</span>
               <span><Clock3 size={17} /> Last action: {lastAction}</span>
             </div>
           </section>

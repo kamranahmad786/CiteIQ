@@ -5,7 +5,7 @@ function getErrorDetail(error: unknown) {
   if (typeof error === "object" && error !== null && "response" in error) {
     const response = (error as { response?: { status?: number; data?: { detail?: string } } }).response;
     if (response?.status === 404) {
-      return "PDF upload API was not found. Please restart the backend server so the new PDF ingestion route is loaded.";
+      return "PDF upload service was not found. Please restart the backend server so the new PDF upload route is loaded.";
     }
     return response?.data?.detail;
   }

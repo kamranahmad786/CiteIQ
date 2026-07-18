@@ -39,7 +39,7 @@ NOTIFICATIONS: list[dict[str, object]] = [
     {
         "id": "notif-role-sync",
         "title": "Role sync available",
-        "detail": "Admin roles can be refreshed from workspace policy",
+        "detail": "Admin roles can be refreshed from company access rules",
         "level": "Action",
         "category": "Admin",
         "created_at": now_iso(),
@@ -49,10 +49,10 @@ NOTIFICATIONS: list[dict[str, object]] = [
 ]
 
 LIVE_NOTIFICATION_TEMPLATES = [
-    ("New indexed document signal", "Document ingestion pipeline completed a fresh readiness scan", "Ready", "Ingestion", "documents"),
-    ("Answer quality drift check", "Retrieval quality monitor found 2 prompts that need review", "Watch", "Quality", "analytics"),
-    ("Support SLA update", "One support case moved to priority review", "Action", "Support", "support"),
-    ("Vector index heartbeat", "pgvector HNSW index is responding within target latency", "Ready", "Vector", "vector-index"),
+    ("New document is ready", "Document upload processing completed a fresh readiness check", "Ready", "Documents", "documents"),
+    ("Answer quality check", "Answer monitor found 2 questions that need review", "Watch", "Quality", "analytics"),
+    ("Support response update", "One support case moved to priority review", "Action", "Support", "support"),
+    ("Search health update", "Document search is responding within the target speed", "Ready", "Search", "vector-index"),
 ]
 
 

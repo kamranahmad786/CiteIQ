@@ -14,15 +14,15 @@ import {
 } from "lucide-react";
 
 const qualityMetrics = [
-  ["Retrieval latency", 72, "840ms p95"],
+  ["Answer speed", 72, "840ms average target"],
   ["Answer quality", 88, "human-reviewed score"],
-  ["Citation coverage", 96, "source-backed answers"],
-  ["Ingestion success", 91, "last 7 days"],
+  ["Source coverage", 96, "answers with source links"],
+  ["Upload success", 91, "last 7 days"],
 ] as const;
 
 const citedDocuments = [
   ["Leave Policy 2026", "HR Policies", 42, 96],
-  ["Expense Reimbursement SOP", "Finance", 31, 92],
+  ["Expense Reimbursement Guide", "Finance", 31, 92],
   ["Vendor Contract Template", "Legal", 24, 89],
   ["Engineering Incident Runbook", "Engineering", 18, 87],
 ] as const;
@@ -42,29 +42,29 @@ export function Analytics() {
     <section className="content-grid analytics-command">
       <section className="analytics-hero">
         <div>
-          <span className="eyebrow">Enterprise analytics</span>
-          <h2>RAG performance command center</h2>
-          <p>Monitor answer quality, citation coverage, adoption, latency, and governance readiness across the CiteIQ workspace.</p>
+          <span className="eyebrow">Reports</span>
+          <h2>Answer and usage overview</h2>
+          <p>Track answer quality, source accuracy, user activity, response speed, and launch readiness across CiteIQ.</p>
         </div>
         <div className="analytics-hero-card">
           <span><ShieldCheck size={16} /> Executive health</span>
           <strong>96%</strong>
-          <small>citation coverage across indexed spaces</small>
+          <small>answers with source links across document groups</small>
         </div>
       </section>
 
       <div className="metric-row compact-metrics">
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><Sparkles size={20} /></div><small>Trusted</small></div>
-          <span>Grounded answer rate</span>
+          <span>Trusted answer rate</span>
           <strong>93%</strong>
           <small>+4.8% vs last week</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><Clock3 size={20} /></div><small>Target</small></div>
-          <span>P95 latency</span>
+          <span>Answer speed</span>
           <strong>840ms</strong>
-          <small>within SLA</small>
+          <small>within target</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><Users size={20} /></div><small>Adoption</small></div>
@@ -73,10 +73,10 @@ export function Analytics() {
           <small>34 power users</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><FileText size={20} /></div><small>Corpus</small></div>
-          <span>Indexed sources</span>
+          <div className="metric-card-top"><div className="metric-icon"><FileText size={20} /></div><small>Documents</small></div>
+          <span>Ready documents</span>
           <strong>4</strong>
-          <small>4 governed spaces</small>
+          <small>4 document groups</small>
         </article>
       </div>
 
@@ -85,7 +85,7 @@ export function Analytics() {
           <section className="table-panel">
             <div className="panel-heading">
               <div>
-                <span className="eyebrow">Evaluation</span>
+                <span className="eyebrow">Quality</span>
                 <h2>Quality metrics</h2>
               </div>
               <span className="count-pill">weekly view</span>
@@ -126,7 +126,7 @@ export function Analytics() {
             <div className="panel-heading">
               <div>
                 <span className="eyebrow">Source usage</span>
-                <h2>Most cited documents</h2>
+                <h2>Most referenced documents</h2>
               </div>
               <span className="count-pill">4 indexed</span>
             </div>
@@ -134,8 +134,8 @@ export function Analytics() {
               <thead>
                 <tr>
                   <th>Document</th>
-                  <th>Space</th>
-                  <th>Citations</th>
+                  <th>Group</th>
+                  <th>Sources</th>
                   <th>Coverage</th>
                 </tr>
               </thead>
@@ -155,18 +155,18 @@ export function Analytics() {
 
         <aside className="analytics-side">
           <section className="table-panel">
-            <span className="eyebrow">Governance</span>
+            <span className="eyebrow">Review</span>
             <h2>Risk signals</h2>
             <div className="risk-list">
-              <div className="risk-row"><CheckCircle2 size={18} /><div><strong>Citation drift</strong><small>No significant drift detected</small></div><span className="risk-pill">Low</span></div>
-              <div className="risk-row"><AlertTriangle size={18} /><div><strong>Stale sources</strong><small>1 retention review due soon</small></div><span className="risk-pill warn">Watch</span></div>
-              <div className="risk-row"><CheckCircle2 size={18} /><div><strong>Abstentions</strong><small>Healthy refusal behavior</small></div><span className="risk-pill">Good</span></div>
+              <div className="risk-row"><CheckCircle2 size={18} /><div><strong>Source accuracy</strong><small>No major source issue found</small></div><span className="risk-pill">Low</span></div>
+              <div className="risk-row"><AlertTriangle size={18} /><div><strong>Old documents</strong><small>1 document review due soon</small></div><span className="risk-pill warn">Watch</span></div>
+              <div className="risk-row"><CheckCircle2 size={18} /><div><strong>Safe no-answer rate</strong><small>Working as expected</small></div><span className="risk-pill">Good</span></div>
             </div>
           </section>
 
           <section className="table-panel">
-            <span className="eyebrow">Operational mix</span>
-            <h2>Workspace distribution</h2>
+            <span className="eyebrow">Usage mix</span>
+            <h2>Team activity</h2>
             <div className="analytics-donut">
               <div><PieChart size={38} /></div>
               <strong>HR 34%</strong>
@@ -178,7 +178,7 @@ export function Analytics() {
             <span className="eyebrow">Readiness</span>
             <h2>Executive checks</h2>
             <div className="check-list">
-              <span><Gauge size={17} /> SLA tracking active</span>
+              <span><Gauge size={17} /> Response target tracking active</span>
               <span><BarChart3 size={17} /> Quality scoring enabled</span>
               <span><LineChart size={17} /> Trend monitoring ready</span>
               <span><TrendingUp size={17} /> Adoption growth positive</span>

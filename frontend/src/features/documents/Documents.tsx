@@ -122,16 +122,16 @@ export function Documents() {
     <section className="content-grid documents-command">
       <section className="document-hero">
         <div>
-          <span className="eyebrow">Document control plane</span>
-          <h2>Governed enterprise knowledge base</h2>
-          <p>Upload, classify, index, audit, and monitor internal knowledge assets before they are used in grounded answers.</p>
+          <span className="eyebrow">Document center</span>
+          <h2>Company knowledge library</h2>
+          <p>Upload, organize, review, and prepare company documents so teams can ask questions and get trusted answers.</p>
         </div>
         <div className="hero-actions">
           <button className="primary" type="button" onClick={openIngestionWorkbench} aria-expanded={showIngestion} aria-controls="ingestion-workbench">
             <FileUp size={18} />
-            {showIngestion ? "Continue ingestion" : "New ingestion"}
+            {showIngestion ? "Continue upload" : "Upload document"}
           </button>
-          <span><ShieldCheck size={16} /> RBAC-aware retrieval enabled</span>
+          <span><ShieldCheck size={16} /> Secure role-based access enabled</span>
         </div>
       </section>
 
@@ -140,7 +140,7 @@ export function Documents() {
           <div className="metric-card-top"><div className="metric-icon"><FileText size={20} /></div><small>Ready</small></div>
           <span>Total documents</span>
           <strong>{data.length}</strong>
-          <small>{indexedSpaces} indexed spaces</small>
+          <small>{indexedSpaces} document groups</small>
         </article>
         <article className="metric-card command-metric">
           <div className="metric-card-top"><div className="metric-icon"><FolderKanban size={20} /></div><small>Governed</small></div>
@@ -149,16 +149,16 @@ export function Documents() {
           <small>HR, Finance, Legal, Engineering</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><FileSearch size={20} /></div><small>Indexed</small></div>
-          <span>Retrievable chunks</span>
+          <div className="metric-card-top"><div className="metric-icon"><FileSearch size={20} /></div><small>Ready</small></div>
+          <span>Searchable sections</span>
           <strong>42</strong>
-          <small>Local vector provider</small>
+          <small>Prepared for document chat</small>
         </article>
         <article className="metric-card command-metric">
-          <div className="metric-card-top"><div className="metric-icon"><LockKeyhole size={20} /></div><small>Scoped</small></div>
-          <span>Access policies</span>
+          <div className="metric-card-top"><div className="metric-icon"><LockKeyhole size={20} /></div><small>Protected</small></div>
+          <span>Access rules</span>
           <strong>100%</strong>
-          <small>Authorised versions only</small>
+          <small>Only allowed documents</small>
         </article>
       </div>
 
@@ -167,7 +167,7 @@ export function Documents() {
           <section className="table-panel">
             <div className="panel-heading">
               <div>
-                <span className="eyebrow">Knowledge base</span>
+                <span className="eyebrow">Library</span>
                 <h2>Document library</h2>
               </div>
               <span className="count-pill">{filteredDocuments.length} visible</span>
@@ -175,7 +175,7 @@ export function Documents() {
             <div className="document-toolbar">
               <label className="global-search document-search">
                 <Search size={17} />
-                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, file, or space" />
+                <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search title, file, or group" />
               </label>
               <label className="filter-select">
                 <Filter size={17} />
@@ -192,9 +192,9 @@ export function Documents() {
                   <thead>
                     <tr>
                       <th>Document</th>
-                      <th>Space</th>
+                      <th>Group</th>
                       <th>Version</th>
-                      <th>Security</th>
+                      <th>Access</th>
                       <th>Status</th>
                       <th>Actions</th>
                     </tr>
@@ -208,7 +208,7 @@ export function Documents() {
                         </td>
                         <td>{document.space}</td>
                         <td>v{index + 1}.0</td>
-                        <td><span className="risk-pill">RBAC</span></td>
+                        <td><span className="risk-pill">Role based</span></td>
                         <td><span className="status">{document.status}</span></td>
                         <td>
                         <div className="row-actions">
@@ -274,20 +274,20 @@ export function Documents() {
           <section className="document-insights-grid">
             <div className="table-panel">
               <span className="eyebrow">Processing queue</span>
-              <h2>Ingestion pipeline</h2>
+              <h2>Upload progress</h2>
               <div className="pipeline-list">
                 <div className="pipeline-row">
-                  <div><strong>Leave Policy 2026</strong><small>Text extraction and chunking complete</small></div>
+                  <div><strong>Leave Policy 2026</strong><small>Text found and prepared for search</small></div>
                   <span className="risk-pill">Ready</span>
                   <div className="mini-meter"><i style={{ width: "100%" }} /></div>
                 </div>
                 <div className="pipeline-row">
-                  <div><strong>Expense Reimbursement SOP</strong><small>Embedding vectors available</small></div>
+                  <div><strong>Expense Reimbursement Guide</strong><small>Search data is ready</small></div>
                   <span className="risk-pill">Ready</span>
                   <div className="mini-meter"><i style={{ width: "100%" }} /></div>
                 </div>
                 <div className="pipeline-row">
-                  <div><strong>Vendor Contract Template</strong><small>Legal metadata reviewed</small></div>
+                  <div><strong>Vendor Contract Template</strong><small>Legal details reviewed</small></div>
                   <span className="risk-pill">Ready</span>
                   <div className="mini-meter"><i style={{ width: "96%" }} /></div>
                 </div>
@@ -295,13 +295,13 @@ export function Documents() {
             </div>
 
             <div className="table-panel">
-              <span className="eyebrow">Governance</span>
-              <h2>Policy checks</h2>
+              <span className="eyebrow">Review</span>
+              <h2>Document checks</h2>
               <div className="check-list">
-                <span><CheckCircle2 size={17} /> File type allow-list active</span>
-                <span><CheckCircle2 size={17} /> Page citations preserved</span>
-                <span><CheckCircle2 size={17} /> Version lineage tracked</span>
-                <span><Clock3 size={17} /> Retention review pending</span>
+                <span><CheckCircle2 size={17} /> Allowed file types checked</span>
+                <span><CheckCircle2 size={17} /> Page source links saved</span>
+                <span><CheckCircle2 size={17} /> Version history tracked</span>
+                <span><Clock3 size={17} /> Review date pending</span>
               </div>
             </div>
           </section>
@@ -310,11 +310,11 @@ export function Documents() {
         <aside ref={ingestionPanelRef} className={showIngestion ? "document-side" : "document-side is-collapsed"}>
           <form id="ingestion-workbench" className="work-panel upload-form" onSubmit={submit}>
             <div>
-              <span className="eyebrow">Ingestion workbench</span>
+              <span className="eyebrow">Upload center</span>
               <h2>Upload text document</h2>
-              <p>Index text or PDF sources immediately with extraction, chunking, embeddings, retrieval metadata, and document-space governance.</p>
+              <p>Add a text or PDF document. CiteIQ will read the text and make it searchable in chat.</p>
             </div>
-            <div className="mode-switch" role="tablist" aria-label="Ingestion source type">
+            <div className="mode-switch" role="tablist" aria-label="Upload source type">
               <button
                 type="button"
                 className={ingestionMode === "text" ? "active" : ""}
@@ -337,7 +337,7 @@ export function Documents() {
               <input ref={titleInputRef} value={title} onChange={(event) => setTitle(event.target.value)} required />
             </label>
             <label>
-              Space
+              Group
               <select value={space} onChange={(event) => setSpace(event.target.value)}>
                 <option>General</option>
                 <option>HR Policies</option>
@@ -361,20 +361,20 @@ export function Documents() {
             )}
             <button className="primary" disabled={mutation.isPending || fileMutation.isPending}>
               {mutation.isPending || fileMutation.isPending ? <RefreshCw size={18} /> : <FileUp size={18} />}
-              {ingestionMode === "pdf" ? "Extract and index PDF" : "Index document"}
+              {ingestionMode === "pdf" ? "Read and save PDF" : "Save document"}
             </button>
             {fileMutation.isError && <p className="form-status error">{pdfError}</p>}
-            {fileMutation.isSuccess && <p className="form-status">PDF text extracted and indexed. You can ask questions in Chat now.</p>}
-            {mutation.isSuccess && <p className="form-status">Document indexed. You can ask questions in Chat now.</p>}
+            {fileMutation.isSuccess && <p className="form-status">PDF text saved. You can ask questions in Chat now.</p>}
+            {mutation.isSuccess && <p className="form-status">Document saved. You can ask questions in Chat now.</p>}
           </form>
 
           <section className="table-panel">
-            <span className="eyebrow">Classification</span>
-            <h2>Metadata standards</h2>
+            <span className="eyebrow">Details</span>
+            <h2>Document rules</h2>
             <div className="settings-list">
-              <span><strong><Tags size={17} /> Required tags</strong><small>space, owner, source type, sensitivity</small></span>
-              <span><strong><ShieldCheck size={17} /> Access policy</strong><small>organisation, department, document space</small></span>
-              <span><strong><Clock3 size={17} /> Retention</strong><small>review every 90 days for policy sources</small></span>
+              <span><strong><Tags size={17} /> Required details</strong><small>group, owner, file type, sensitivity</small></span>
+              <span><strong><ShieldCheck size={17} /> Access rules</strong><small>company, department, document group</small></span>
+              <span><strong><Clock3 size={17} /> Review cycle</strong><small>review every 90 days for policy documents</small></span>
             </div>
           </section>
         </aside>
