@@ -28,12 +28,19 @@ def build_text_pdf(text: str) -> bytes:
     return bytes(pdf)
 
 
+def auth_headers(client: TestClient, email: str = "admin@citeiq.test", password: str = "password") -> dict[str, str]:
+    response = client.post("/api/auth/login", json={"email": email, "password": password})
+    return {"Authorization": f"Bearer {response.json()['access_token']}"}
+
+
 def test_pdf_upload_extracts_text_and_chat_can_answer():
     client = TestClient(app)
+    headers = auth_headers(client)
     pdf_bytes = build_text_pdf("Mars policy grants 7 rover days for field research.")
 
     upload_response = client.post(
         "/api/documents/upload-file",
+        headers=headers,
         data={"title": "Mars Field Policy", "space": "Engineering"},
         files={"file": ("mars_policy.pdf", pdf_bytes, "application/pdf")},
     )
@@ -43,6 +50,7 @@ def test_pdf_upload_extracts_text_and_chat_can_answer():
 
     chat_response = client.post(
         "/api/chat/sessions/default/messages",
+        headers=headers,
         json={
             "question": "How many rover days does the Mars policy grant?",
             "top_k": 5,
@@ -57,19 +65,41 @@ def test_pdf_upload_extracts_text_and_chat_can_answer():
 
 def test_document_scoped_summary_answers_resume_style_question():
     client = TestClient(app)
+    headers = auth_headers(client)
     pdf_bytes = build_text_pdf("Kamran Ahmad is a full stack developer skilled in React, FastAPI, AWS, Docker, and PostgreSQL.")
 
     upload_response = client.post(
         "/api/documents/upload-file",
+        headers=headers,
         data={"title": "resume", "space": "Engineering"},
         files={"file": ("resume.pdf", pdf_bytes, "application/pdf")},
     )
 
     chat_response = client.post(
         "/api/chat/sessions/default/messages",
+        headers=headers,
         json={"question": "Summarise resume", "top_k": 5, "document_id": upload_response.json()["id"]},
     )
 
     assert chat_response.status_code == 200
     assert "Kamran Ahmad" in chat_response.json()["answer"]
     assert chat_response.json()["citations"]
+
+
+def test_standard_user_cannot_upload_document():
+    client = TestClient(app)
+    email = "viewer.user@citeiq.test"
+    password = "password123"
+    client.post(
+      "/api/auth/signup",
+      json={"name": "Viewer User", "email": email, "password": password, "organisation": "CiteIQ Workspace"},
+    )
+    headers = auth_headers(client, email, password)
+
+    response = client.post(
+        "/api/documents",
+        headers=headers,
+        json={"title": "Restricted", "source_filename": "restricted.txt", "content": "private", "space": "General"},
+    )
+
+    assert response.status_code == 403

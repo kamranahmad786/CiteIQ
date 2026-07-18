@@ -40,19 +40,20 @@ import {
   markNotificationRead,
   type NotificationRecord,
 } from "./api/notifications";
+import { firstAllowedView, hasPermission } from "./auth/permissions";
 
 type View = "dashboard" | "documents" | "chat" | "analytics" | "admin" | "vector-index" | "settings" | "support";
 type ThemeMode = "day" | "night";
 
 const primaryNav = [
-  { id: "dashboard" as const, label: "Dashboard", icon: Activity },
-  { id: "documents" as const, label: "Documents", icon: FileText },
-  { id: "chat" as const, label: "Chat", icon: MessageSquare },
+  { id: "dashboard" as const, label: "Dashboard", icon: Activity, permission: "dashboard:view" },
+  { id: "documents" as const, label: "Documents", icon: FileText, permission: "documents:view" },
+  { id: "chat" as const, label: "Chat", icon: MessageSquare, permission: "chat:ask" },
 ];
 
 const manageNav = [
-  { id: "analytics" as const, label: "Analytics", icon: BarChart3 },
-  { id: "admin" as const, label: "Admin", icon: Users },
+  { id: "analytics" as const, label: "Analytics", icon: BarChart3, permission: "analytics:view" },
+  { id: "admin" as const, label: "Admin", icon: Users, permission: "admin:view" },
 ];
 
 const globalSearchItems = [
@@ -114,6 +115,7 @@ export function App() {
     const raw = window.localStorage.getItem("citeiq.auth");
     return raw ? JSON.parse(raw) as AuthResponse : null;
   });
+  const user = auth?.user;
   const unreadCount = notifications.filter((item) => !item.read).length;
 
   useEffect(() => {
@@ -156,7 +158,7 @@ export function App() {
   function handleAuthenticated(nextAuth: AuthResponse) {
     window.localStorage.setItem("citeiq.auth", JSON.stringify(nextAuth));
     setAuth(nextAuth);
-    setView("dashboard");
+    setView(firstAllowedView(nextAuth.user) as View);
   }
 
   function logout() {
@@ -169,6 +171,10 @@ export function App() {
   );
 
   function openView(nextView: View) {
+    if (user && !canView(user, nextView)) {
+      setView(nextView);
+      return;
+    }
     setView(nextView);
     setShowSearch(false);
     setShowNotifications(false);
@@ -220,6 +226,14 @@ export function App() {
     return <AuthPage onAuthenticated={handleAuthenticated} />;
   }
 
+  const visiblePrimaryNav = primaryNav.filter((item) => hasPermission(auth.user, item.permission));
+  const visibleManageNav = manageNav.filter((item) => hasPermission(auth.user, item.permission));
+  const canManageDocuments = hasPermission(auth.user, "documents:upload") || hasPermission(auth.user, "documents:archive");
+  const canInviteUser = hasPermission(auth.user, "users:invite");
+  const canSyncRoles = hasPermission(auth.user, "roles:sync");
+  const canManageSearch = hasPermission(auth.user, "search:manage");
+  const currentViewAllowed = canView(auth.user, view);
+
   return (
     <div className="shell">
       <aside className="sidebar">
@@ -240,7 +254,7 @@ export function App() {
         <nav className="sidebar-nav" aria-label="Product navigation">
           <div className="nav-section">
             <span className="nav-section-title">Workspace</span>
-            {primaryNav.map((item) => {
+            {visiblePrimaryNav.map((item) => {
               const Icon = item.icon;
               return (
                 <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => setView(item.id)}>
@@ -252,7 +266,7 @@ export function App() {
           </div>
           <div className="nav-section">
             <span className="nav-section-title">Operate</span>
-            {manageNav.map((item) => {
+            {visibleManageNav.map((item) => {
               const Icon = item.icon;
               return (
                 <button key={item.id} className={view === item.id ? "active" : ""} onClick={() => setView(item.id)}>
@@ -264,15 +278,19 @@ export function App() {
           </div>
           <div className="nav-section">
             <span className="nav-section-title">Resources</span>
-            <button className={view === "vector-index" ? "active" : ""} onClick={() => setView("vector-index")}>
-              <Database size={18} />
-              <span>Search health</span>
-              <small>ready</small>
-            </button>
-            <button className={view === "settings" ? "active" : ""} onClick={() => setView("settings")}>
-              <Settings size={18} />
-              <span>Settings</span>
-            </button>
+            {hasPermission(auth.user, "search:view") && (
+              <button className={view === "vector-index" ? "active" : ""} onClick={() => setView("vector-index")}>
+                <Database size={18} />
+                <span>Search health</span>
+                <small>ready</small>
+              </button>
+            )}
+            {hasPermission(auth.user, "settings:manage") && (
+              <button className={view === "settings" ? "active" : ""} onClick={() => setView("settings")}>
+                <Settings size={18} />
+                <span>Settings</span>
+              </button>
+            )}
           </div>
         </nav>
         <div className="sidebar-card">
@@ -283,15 +301,19 @@ export function App() {
           <div className="usage-meter"><span /></div>
           <small>4 document groups ready</small>
         </div>
-        <button className="upload-shortcut" onClick={() => setView("documents")}>
-          <Upload size={18} />
-          Upload document
-        </button>
-        <div className="sidebar-footer">
-          <button className={view === "support" ? "active" : ""} title="Support" onClick={() => setView("support")}>
-            <LifeBuoy size={17} />
-            Support
+        {hasPermission(auth.user, "documents:upload") && (
+          <button className="upload-shortcut" onClick={() => setView("documents")}>
+            <Upload size={18} />
+            Upload document
           </button>
+        )}
+        <div className="sidebar-footer">
+          {hasPermission(auth.user, "support:view") && (
+            <button className={view === "support" ? "active" : ""} title="Support" onClick={() => setView("support")}>
+              <LifeBuoy size={17} />
+              Support
+            </button>
+          )}
           <button title="Logout" onClick={logout}>
             <LogOut size={17} />
             Logout
@@ -318,9 +340,9 @@ export function App() {
                     <small>{auth.user.email}</small>
                   </div>
                 </div>
-                <button type="button" onClick={() => openView("admin")}><UserRound size={16} /> Profile and roles</button>
-                <button type="button" onClick={() => openView("settings")}><Settings size={16} /> Workspace settings</button>
-                <button type="button" onClick={() => openView("admin")}><ShieldCheck size={16} /> Security controls</button>
+                {hasPermission(auth.user, "admin:view") && <button type="button" onClick={() => openView("admin")}><UserRound size={16} /> Profile and roles</button>}
+                {hasPermission(auth.user, "settings:manage") && <button type="button" onClick={() => openView("settings")}><Settings size={16} /> Workspace settings</button>}
+                {hasPermission(auth.user, "admin:view") && <button type="button" onClick={() => openView("admin")}><ShieldCheck size={16} /> Security controls</button>}
                 <button type="button" onClick={toggleTheme}>{theme === "day" ? <Moon size={16} /> : <Sun size={16} />} {theme === "day" ? "Night mode" : "Day mode"}</button>
                 <button type="button" onClick={logout}><LogOut size={16} /> Logout</button>
               </div>
@@ -451,9 +473,9 @@ export function App() {
                     <small>{auth.user.roles.map((role) => role.replaceAll("_", " ")).join(" · ")}</small>
                     </div>
                   </div>
-                  <button type="button" onClick={() => openView("admin")}><UserRound size={16} /> Profile and roles</button>
-                  <button type="button" onClick={() => openView("settings")}><Settings size={16} /> Workspace settings</button>
-                  <button type="button" onClick={() => openView("admin")}><ShieldCheck size={16} /> Security controls</button>
+                  {hasPermission(auth.user, "admin:view") && <button type="button" onClick={() => openView("admin")}><UserRound size={16} /> Profile and roles</button>}
+                  {hasPermission(auth.user, "settings:manage") && <button type="button" onClick={() => openView("settings")}><Settings size={16} /> Workspace settings</button>}
+                  {hasPermission(auth.user, "admin:view") && <button type="button" onClick={() => openView("admin")}><ShieldCheck size={16} /> Security controls</button>}
                   <button type="button" onClick={toggleTheme}>{theme === "day" ? <Moon size={16} /> : <Sun size={16} />} {theme === "day" ? "Night mode" : "Day mode"}</button>
                   <button type="button" onClick={logout}><LogOut size={16} /> Logout</button>
                 </div>
@@ -461,14 +483,15 @@ export function App() {
             </div>
           </div>
         </header>
-        {view === "dashboard" && <Dashboard onOpenChat={() => setView("chat")} />}
-        {view === "documents" && <Documents />}
-        {view === "chat" && <Chat />}
-        {view === "analytics" && <Analytics />}
-        {view === "admin" && <Admin />}
-        {view === "vector-index" && <VectorIndex />}
-        {view === "settings" && <SettingsPage />}
-        {view === "support" && <Support />}
+        {!currentViewAllowed && <AccessDenied onGoHome={() => setView(firstAllowedView(auth.user) as View)} />}
+        {currentViewAllowed && view === "dashboard" && <Dashboard onOpenChat={() => setView("chat")} />}
+        {currentViewAllowed && view === "documents" && <Documents canManageDocuments={canManageDocuments} />}
+        {currentViewAllowed && view === "chat" && <Chat />}
+        {currentViewAllowed && view === "analytics" && <Analytics />}
+        {currentViewAllowed && view === "admin" && <Admin canInviteUser={canInviteUser} canSyncRoles={canSyncRoles} />}
+        {currentViewAllowed && view === "vector-index" && <VectorIndex canManageSearch={canManageSearch} />}
+        {currentViewAllowed && view === "settings" && <SettingsPage />}
+        {currentViewAllowed && view === "support" && <Support />}
       </main>
     </div>
   );
@@ -539,4 +562,28 @@ function relativeTime(value: string) {
 
 function isView(value: string | null | undefined): value is View {
   return Boolean(value && ["dashboard", "documents", "chat", "analytics", "admin", "vector-index", "settings", "support"].includes(value));
+}
+
+function canView(user: AuthResponse["user"], view: View) {
+  return {
+    dashboard: hasPermission(user, "dashboard:view"),
+    documents: hasPermission(user, "documents:view"),
+    chat: hasPermission(user, "chat:ask"),
+    analytics: hasPermission(user, "analytics:view"),
+    admin: hasPermission(user, "admin:view"),
+    "vector-index": hasPermission(user, "search:view"),
+    settings: hasPermission(user, "settings:manage"),
+    support: hasPermission(user, "support:view"),
+  }[view];
+}
+
+function AccessDenied({ onGoHome }: { onGoHome: () => void }) {
+  return (
+    <section className="table-panel access-denied-panel">
+      <ShieldCheck size={34} />
+      <h2>You do not have access to this page</h2>
+      <p>Ask your admin to update your role if you need this section for your work.</p>
+      <button className="primary" type="button" onClick={onGoHome}>Go to my home page</button>
+    </section>
+  );
 }

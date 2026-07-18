@@ -54,7 +54,7 @@ def signup(payload: SignupRequest) -> LoginResponse:
         id=str(uuid4()),
         email=normalized_email,
         name=payload.name.strip(),
-        roles=["organisation_admin", "knowledge_editor", "standard_user"],
+        roles=["standard_user"],
         organisation=payload.organisation.strip() or "CiteIQ Workspace",
     )
     SIGNED_UP_USERS[normalized_email] = (user, payload.password)

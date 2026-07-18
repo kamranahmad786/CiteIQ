@@ -9,6 +9,21 @@ export const api = axios.create({
   withCredentials: true,
 });
 
+api.interceptors.request.use((config) => {
+  const rawAuth = window.localStorage.getItem("citeiq.auth");
+  if (rawAuth) {
+    try {
+      const auth = JSON.parse(rawAuth) as { access_token?: string };
+      if (auth.access_token) {
+        config.headers.Authorization = `Bearer ${auth.access_token}`;
+      }
+    } catch {
+      window.localStorage.removeItem("citeiq.auth");
+    }
+  }
+  return config;
+});
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {

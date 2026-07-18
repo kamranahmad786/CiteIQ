@@ -30,7 +30,7 @@ const auditEvents = [
   ["admin@citeiq.test", "updated role", "finance@citeiq.test", "1h ago"],
 ] as const;
 
-export function Admin() {
+export function Admin({ canInviteUser = true, canSyncRoles = true }: { canInviteUser?: boolean; canSyncRoles?: boolean }) {
   const [users, setUsers] = useState<(readonly [string, string, string, string])[]>([...initialUsers]);
   const [auditItems, setAuditItems] = useState<(readonly [string, string, string, string])[]>([...auditEvents]);
   const [showInvite, setShowInvite] = useState(false);
@@ -61,12 +61,12 @@ export function Admin() {
           <p>Manage team members, roles, security checks, activity history, and document access from one simple admin page.</p>
         </div>
         <div className="admin-hero-actions">
-          <button className="primary" type="button" onClick={() => setShowInvite((current) => !current)}><UserPlus size={18} /> Invite user</button>
-          <button className="ghost-action" type="button" onClick={syncRoles}><RotateCw size={17} /> Sync roles</button>
+          {canInviteUser && <button className="primary" type="button" onClick={() => setShowInvite((current) => !current)}><UserPlus size={18} /> Invite user</button>}
+          {canSyncRoles && <button className="ghost-action" type="button" onClick={syncRoles}><RotateCw size={17} /> Update roles</button>}
         </div>
       </section>
 
-      {showInvite && (
+      {canInviteUser && showInvite && (
         <form className="table-panel inline-action-panel" onSubmit={inviteUser}>
           <div>
             <span className="eyebrow">Invite user</span>
@@ -179,7 +179,7 @@ export function Admin() {
           <section className="table-panel">
               <span className="eyebrow">Workspace rules</span>
               <h2>Admin actions</h2>
-              <p className="empty">{syncStatus}</p>
+            <p className="empty">{syncStatus}</p>
             <div className="admin-actions-list">
               <button type="button"><SlidersHorizontal size={17} /> Configure access rules</button>
               <button type="button"><Database size={17} /> Manage document groups</button>

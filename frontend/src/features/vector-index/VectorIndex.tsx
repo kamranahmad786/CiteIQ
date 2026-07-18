@@ -27,7 +27,7 @@ const initialPartitions = [
   { space: "Engineering", documents: 1, chunks: 8, recall: 91, status: "ready" },
 ];
 
-export function VectorIndex() {
+export function VectorIndex({ canManageSearch = true }: { canManageSearch?: boolean }) {
   const [selectedSpace, setSelectedSpace] = useState("All spaces");
   const [query, setQuery] = useState("vendor contract approval");
   const [status, setStatus] = useState("Last refresh completed successfully");
@@ -78,8 +78,8 @@ export function VectorIndex() {
           <p>Check document search health, refresh searchable data, test search accuracy, and manage document groups.</p>
         </div>
         <div className="vector-hero-actions">
-          <button className="primary" type="button" onClick={rebuildCorpus}><RefreshCw size={18} /> Refresh search</button>
-          <button className="ghost-action" type="button" onClick={syncMetadata}><RotateCw size={17} /> Sync details</button>
+          {canManageSearch && <button className="primary" type="button" onClick={rebuildCorpus}><RefreshCw size={18} /> Refresh search</button>}
+          {canManageSearch && <button className="ghost-action" type="button" onClick={syncMetadata}><RotateCw size={17} /> Sync details</button>}
         </div>
       </section>
 
@@ -171,9 +171,9 @@ export function VectorIndex() {
             <span className="eyebrow">Operations</span>
             <h2>Search controls</h2>
             <div className="admin-actions-list">
-              <button type="button" onClick={rebuildCorpus}><RefreshCw size={17} /> Refresh search</button>
-              <button type="button" onClick={syncMetadata}><RotateCw size={17} /> Sync document details</button>
-              <button type="button" onClick={flushCache}><Eraser size={17} /> Clear saved results</button>
+              <button type="button" onClick={rebuildCorpus} disabled={!canManageSearch}><RefreshCw size={17} /> Refresh search</button>
+              <button type="button" onClick={syncMetadata} disabled={!canManageSearch}><RotateCw size={17} /> Sync document details</button>
+              <button type="button" onClick={flushCache} disabled={!canManageSearch}><Eraser size={17} /> Clear saved results</button>
             </div>
             <p className="action-note">{status}</p>
           </section>

@@ -24,7 +24,7 @@ import type { DocumentRecord } from "../../api/types";
 const spaces = ["All spaces", "General", "HR Policies", "Finance", "Legal", "Engineering"];
 type IngestionMode = "text" | "pdf";
 
-export function Documents() {
+export function Documents({ canManageDocuments = true }: { canManageDocuments?: boolean }) {
   const queryClient = useQueryClient();
   const { data = [], isLoading } = useQuery({ queryKey: ["documents"], queryFn: listDocuments });
   const ingestionPanelRef = useRef<HTMLElement | null>(null);
@@ -127,10 +127,12 @@ export function Documents() {
           <p>Upload, organize, review, and prepare company documents so teams can ask questions and get trusted answers.</p>
         </div>
         <div className="hero-actions">
-          <button className="primary" type="button" onClick={openIngestionWorkbench} aria-expanded={showIngestion} aria-controls="ingestion-workbench">
-            <FileUp size={18} />
-            {showIngestion ? "Continue upload" : "Upload document"}
-          </button>
+          {canManageDocuments && (
+            <button className="primary" type="button" onClick={openIngestionWorkbench} aria-expanded={showIngestion} aria-controls="ingestion-workbench">
+              <FileUp size={18} />
+              {showIngestion ? "Continue upload" : "Upload document"}
+            </button>
+          )}
           <span><ShieldCheck size={16} /> Secure role-based access enabled</span>
         </div>
       </section>
@@ -196,7 +198,7 @@ export function Documents() {
                       <th>Version</th>
                       <th>Access</th>
                       <th>Status</th>
-                      <th>Actions</th>
+                      {canManageDocuments && <th>Actions</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -210,35 +212,37 @@ export function Documents() {
                         <td>v{index + 1}.0</td>
                         <td><span className="risk-pill">Role based</span></td>
                         <td><span className="status">{document.status}</span></td>
-                        <td>
-                        <div className="row-actions">
-                            <button type="button" title="Version history" onClick={() => setHistoryDocument(document)}>
-                              <History size={16} />
-                            </button>
-                            <button type="button" title="Download" onClick={() => downloadMutation.mutate(document)}>
-                              <Download size={16} />
-                            </button>
-                            {document.status === "archived" ? (
-                              <button
-                                type="button"
-                                title="Unarchive"
-                                disabled={unarchiveMutation.isPending}
-                                onClick={() => unarchiveMutation.mutate(document.id)}
-                              >
-                                <RotateCcw size={16} />
+                        {canManageDocuments && (
+                          <td>
+                            <div className="row-actions">
+                              <button type="button" title="Version history" onClick={() => setHistoryDocument(document)}>
+                                <History size={16} />
                               </button>
-                            ) : (
-                              <button
-                                type="button"
-                                title="Archive"
-                                disabled={archiveMutation.isPending}
-                                onClick={() => archiveMutation.mutate(document.id)}
-                              >
-                                <Archive size={16} />
+                              <button type="button" title="Download" onClick={() => downloadMutation.mutate(document)}>
+                                <Download size={16} />
                               </button>
-                            )}
-                          </div>
-                        </td>
+                              {document.status === "archived" ? (
+                                <button
+                                  type="button"
+                                  title="Unarchive"
+                                  disabled={unarchiveMutation.isPending}
+                                  onClick={() => unarchiveMutation.mutate(document.id)}
+                                >
+                                  <RotateCcw size={16} />
+                                </button>
+                              ) : (
+                                <button
+                                  type="button"
+                                  title="Archive"
+                                  disabled={archiveMutation.isPending}
+                                  onClick={() => archiveMutation.mutate(document.id)}
+                                >
+                                  <Archive size={16} />
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -307,7 +311,7 @@ export function Documents() {
           </section>
         </div>
 
-        <aside ref={ingestionPanelRef} className={showIngestion ? "document-side" : "document-side is-collapsed"}>
+        {canManageDocuments && <aside ref={ingestionPanelRef} className={showIngestion ? "document-side" : "document-side is-collapsed"}>
           <form id="ingestion-workbench" className="work-panel upload-form" onSubmit={submit}>
             <div>
               <span className="eyebrow">Upload center</span>
@@ -377,7 +381,7 @@ export function Documents() {
               <span><strong><Clock3 size={17} /> Review cycle</strong><small>review every 90 days for policy documents</small></span>
             </div>
           </section>
-        </aside>
+        </aside>}
       </section>
     </section>
   );

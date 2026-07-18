@@ -1127,6 +1127,25 @@ p {
   color: var(--muted);
 }
 
+.access-denied-panel {
+  display: grid;
+  place-items: center;
+  gap: 10px;
+  max-width: 620px;
+  margin: 52px auto;
+  padding: 34px;
+  text-align: center;
+}
+
+.access-denied-panel svg {
+  color: var(--teal);
+}
+
+.access-denied-panel p {
+  max-width: 460px;
+  color: var(--muted);
+}
+
 .user-popover button {
   grid-template-columns: auto 1fr;
   align-items: center;

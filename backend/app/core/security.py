@@ -53,6 +53,11 @@ def build_access_token(payload: dict, secret: str, ttl_minutes: int) -> str:
     return "local." + hashlib.sha256((encoded + secret).encode("utf-8")).hexdigest()
 
 
+def decode_access_token(token: str, secret: str) -> dict:
+    if not jwt:
+        return {}
+    return jwt.decode(token, secret, algorithms=["HS256"])
+
+
 def build_refresh_token() -> str:
     return secrets.token_urlsafe(64)
-

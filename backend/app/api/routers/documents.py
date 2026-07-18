@@ -5,7 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Response, UploadFile
 from pypdf import PdfReader
 
-from app.api.deps import get_repository
+from app.api.deps import get_repository, require_permission
 from app.domain.documents.entities import Document
 from app.domain.documents.repository import InMemoryDocumentRepository
 from app.schemas.api import DocumentResponse, DocumentVersionResponse, UploadDocumentRequest
@@ -84,12 +84,19 @@ def get_document_or_404(document_id: str, repo: InMemoryDocumentRepository) -> D
 
 
 @router.get("", response_model=list[DocumentResponse])
-def list_documents(repo: InMemoryDocumentRepository = Depends(get_repository)):
+def list_documents(
+    repo: InMemoryDocumentRepository = Depends(get_repository),
+    _user=Depends(require_permission("documents:view")),
+):
     return [serialize_document(document) for document in repo.list()]
 
 
 @router.post("", response_model=DocumentResponse)
-def upload_document(payload: UploadDocumentRequest, repo: InMemoryDocumentRepository = Depends(get_repository)):
+def upload_document(
+    payload: UploadDocumentRequest,
+    repo: InMemoryDocumentRepository = Depends(get_repository),
+    _user=Depends(require_permission("documents:upload")),
+):
     document = Document(
         title=payload.title,
         source_filename=payload.source_filename,
@@ -105,6 +112,7 @@ async def upload_document_file(
     space: str = Form("General"),
     file: UploadFile = File(...),
     repo: InMemoryDocumentRepository = Depends(get_repository),
+    _user=Depends(require_permission("documents:upload")),
 ):
     filename = file.filename or "uploaded.pdf"
     if file.content_type != "application/pdf" and not filename.lower().endswith(".pdf"):
@@ -123,7 +131,11 @@ async def upload_document_file(
 
 
 @router.get("/{document_id}/versions", response_model=list[DocumentVersionResponse])
-def document_versions(document_id: str, repo: InMemoryDocumentRepository = Depends(get_repository)):
+def document_versions(
+    document_id: str,
+    repo: InMemoryDocumentRepository = Depends(get_repository),
+    _user=Depends(require_permission("documents:view")),
+):
     document = get_document_or_404(document_id, repo)
     return [
         DocumentVersionResponse(
@@ -137,7 +149,11 @@ def document_versions(document_id: str, repo: InMemoryDocumentRepository = Depen
 
 
 @router.get("/{document_id}/download")
-def download_document(document_id: str, repo: InMemoryDocumentRepository = Depends(get_repository)):
+def download_document(
+    document_id: str,
+    repo: InMemoryDocumentRepository = Depends(get_repository),
+    _user=Depends(require_permission("documents:view")),
+):
     document = get_document_or_404(document_id, repo)
     filename = document.source_filename.replace('"', "")
     return Response(
@@ -148,7 +164,11 @@ def download_document(document_id: str, repo: InMemoryDocumentRepository = Depen
 
 
 @router.patch("/{document_id}/archive", response_model=DocumentResponse)
-def archive_document(document_id: str, repo: InMemoryDocumentRepository = Depends(get_repository)):
+def archive_document(
+    document_id: str,
+    repo: InMemoryDocumentRepository = Depends(get_repository),
+    _user=Depends(require_permission("documents:archive")),
+):
     document = get_document_or_404(document_id, repo)
     archived_document = repo.archive(document.id)
     if archived_document is None:
@@ -157,7 +177,11 @@ def archive_document(document_id: str, repo: InMemoryDocumentRepository = Depend
 
 
 @router.patch("/{document_id}/unarchive", response_model=DocumentResponse)
-def unarchive_document(document_id: str, repo: InMemoryDocumentRepository = Depends(get_repository)):
+def unarchive_document(
+    document_id: str,
+    repo: InMemoryDocumentRepository = Depends(get_repository),
+    _user=Depends(require_permission("documents:archive")),
+):
     document = get_document_or_404(document_id, repo)
     restored_document = repo.unarchive(document.id)
     if restored_document is None:
