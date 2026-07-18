@@ -1873,7 +1873,7 @@ td small {
 .chat-layout {
   display: grid;
   grid-template-columns: 236px minmax(0, 1fr);
-  gap: 18px;
+  gap: 20px;
   min-height: min(720px, calc(100vh - 150px));
 }
 
@@ -1949,9 +1949,10 @@ td small {
 }
 
 .advanced-chat-layout {
-  grid-template-columns: minmax(240px, 280px) minmax(420px, 1fr) minmax(260px, 320px);
+  grid-template-columns: minmax(220px, 252px) minmax(0, 1fr) minmax(286px, 318px);
   align-items: start;
   min-height: 0;
+  gap: 20px;
 }
 
 .session-panel {
@@ -1965,6 +1966,8 @@ td small {
 .advanced-session-panel {
   position: sticky;
   top: 28px;
+  max-height: calc(100vh - 56px);
+  overflow: hidden;
 }
 
 .session-search {
@@ -1976,6 +1979,20 @@ td small {
 .session-list {
   display: grid;
   gap: 8px;
+  max-height: 340px;
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.session-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.session-list::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
 }
 
 .session-panel button {
@@ -2004,6 +2021,10 @@ td small {
 .session-panel button.active,
 .session-panel button:hover {
   background: #e5f1ed;
+}
+
+.session-panel button.active {
+  box-shadow: inset 4px 0 0 var(--teal);
 }
 
 .chat-guardrail-card {
@@ -2036,8 +2057,12 @@ td small {
 
 .advanced-chat-panel {
   min-width: 0;
-  grid-template-rows: auto minmax(300px, 1fr) auto;
+  grid-template-rows: auto minmax(430px, 1fr) auto;
   align-content: start;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  box-shadow: var(--shadow);
 }
 
 .chat-toolbar {
@@ -2061,6 +2086,9 @@ td small {
 
 .chat-mode-card {
   border-left: 4px solid var(--teal);
+  background:
+    linear-gradient(150deg, rgba(24, 113, 93, 0.08), transparent 58%),
+    var(--surface);
 }
 
 .chat-controls span,
@@ -2103,6 +2131,10 @@ td small {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: stretch;
+  padding: 4px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
 }
 
 .starter-row button {
@@ -2118,11 +2150,12 @@ td small {
   grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   gap: 8px;
-  min-height: 64px;
+  min-height: 58px;
   text-align: left;
   line-height: 1.12;
   min-width: 0;
   overflow-wrap: anywhere;
+  background: var(--surface);
 }
 
 .advanced-starters button svg {
@@ -2146,8 +2179,11 @@ td small {
 }
 
 .advanced-messages {
-  min-height: 300px;
-  max-height: min(420px, calc(100vh - 480px));
+  min-height: 430px;
+  max-height: min(560px, calc(100vh - 390px));
+  background:
+    linear-gradient(180deg, rgba(24, 113, 93, 0.035), transparent 160px),
+    #f8fbfa;
 }
 
 .empty-state {
@@ -2199,6 +2235,7 @@ td small {
 
 .advanced-message .bubble.assistant {
   max-width: min(920px, 100%);
+  box-shadow: 0 14px 34px rgba(16, 35, 31, 0.06);
 }
 
 .assistant-label {
@@ -2285,6 +2322,7 @@ summary {
 .advanced-composer {
   align-items: end;
   min-width: 0;
+  padding-top: 2px;
 }
 
 .advanced-composer textarea {
@@ -2296,8 +2334,93 @@ summary {
 .chat-inspector {
   min-width: 0;
   display: grid;
-  gap: 18px;
+  gap: 14px;
   align-content: start;
+  position: sticky;
+  top: 28px;
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+  padding-right: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+
+.chat-inspector::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-inspector::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 999px;
+}
+
+.chat-inspector .table-panel {
+  padding: 18px;
+  box-shadow: 0 18px 44px rgba(16, 35, 31, 0.08);
+}
+
+.inspector-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.inspector-card-head .eyebrow {
+  margin-bottom: 0;
+}
+
+.live-pill,
+.score-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--teal-dark);
+  background: #e5f1ed;
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.live-pill span {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #54c6a8;
+  box-shadow: 0 0 0 4px rgba(84, 198, 168, 0.14);
+}
+
+.assistant-scope-card {
+  display: grid;
+  gap: 3px;
+  margin-top: 14px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.assistant-scope-card small,
+.assistant-scope-card span {
+  color: var(--muted);
+  font-weight: 800;
+}
+
+.assistant-scope-card strong {
+  color: var(--ink);
+}
+
+.inspector-quality-card {
+  border-left: 4px solid var(--blue);
+}
+
+.inspector-evidence-card {
+  border-left: 4px solid var(--amber);
 }
 
 .bars {
@@ -2901,6 +3024,8 @@ summary {
 :root[data-theme="night"] .risk-pill,
 :root[data-theme="night"] .status,
 :root[data-theme="night"] .count-pill,
+:root[data-theme="night"] .score-pill,
+:root[data-theme="night"] .live-pill,
 :root[data-theme="night"] .user-pill,
 :root[data-theme="night"] .metric-card-top small,
 :root[data-theme="night"] .chat-controls span,
@@ -2918,6 +3043,14 @@ summary {
 
 :root[data-theme="night"] .messages {
   background: #0b1815;
+  border-color: var(--line);
+}
+
+:root[data-theme="night"] .advanced-chat-panel,
+:root[data-theme="night"] .advanced-starters,
+:root[data-theme="night"] .advanced-starters button,
+:root[data-theme="night"] .assistant-scope-card {
+  background: var(--surface);
   border-color: var(--line);
 }
 
@@ -3003,7 +3136,7 @@ summary {
   }
 }
 
-@media (max-width: 1280px) {
+@media (max-width: 1180px) {
   .dashboard-actions-list {
     grid-template-columns: 1fr;
   }
@@ -3015,6 +3148,8 @@ summary {
   .advanced-chat-layout .chat-inspector {
     grid-column: 1 / -1;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    position: static;
+    max-height: none;
   }
 }
 

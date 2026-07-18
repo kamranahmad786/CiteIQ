@@ -305,7 +305,10 @@ export function Chat() {
 
         <aside className="chat-inspector">
           <section className="table-panel chat-mode-card">
-            <span className="eyebrow">Assistant</span>
+            <div className="inspector-card-head">
+              <span className="eyebrow">Assistant command</span>
+              <span className="live-pill"><span /> Live</span>
+            </div>
             <h2>{activeSession.title}</h2>
             <p>{activeSession.mode}</p>
             <div className="chat-controls side-chat-controls">
@@ -317,11 +320,18 @@ export function Chat() {
               </label>
               <span><CheckCircle2 size={15} /> Citations required</span>
             </div>
-            <small className="action-note">Filter: {assistantFilter} · Scope: {activeSession.scope}</small>
+            <div className="assistant-scope-card">
+              <small>Active filter</small>
+              <strong>{assistantFilter}</strong>
+              <span>Scope: {activeSession.scope}</span>
+            </div>
           </section>
 
-          <section className="table-panel">
-            <span className="eyebrow">Answer quality</span>
+          <section className="table-panel inspector-quality-card">
+            <div className="inspector-card-head">
+              <span className="eyebrow">Answer quality</span>
+              <span className="score-pill">98%</span>
+            </div>
             <h2>Retrieval checks</h2>
             <div className="check-list">
               <span><CheckCircle2 size={17} /> Citation policy enforced</span>
@@ -331,8 +341,11 @@ export function Chat() {
             </div>
           </section>
 
-          <section className="table-panel">
-            <span className="eyebrow">Latest evidence</span>
+          <section className="table-panel inspector-evidence-card">
+            <div className="inspector-card-head">
+              <span className="eyebrow">Latest evidence</span>
+              <span className="count-pill">{latestAnswer?.citations.length ?? 0} sources</span>
+            </div>
             <h2>Source snapshot</h2>
             {latestAnswer && latestAnswer.citations.length > 0 ? (
               <div className="settings-list">
