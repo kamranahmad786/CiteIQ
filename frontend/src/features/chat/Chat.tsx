@@ -241,7 +241,7 @@ export function Chat() {
       </section>
 
       <section className="chat-layout advanced-chat-layout">
-        <aside className="session-panel advanced-session-panel">
+        <aside className={`session-panel advanced-session-panel ${sessionQuery.trim() ? "is-searching" : ""}`}>
           <div className="panel-heading">
             <div>
               <span className="eyebrow">Chats</span>
@@ -250,10 +250,16 @@ export function Chat() {
           </div>
           <label className="global-search session-search">
             <Search size={16} />
-            <input value={sessionQuery} onChange={(event) => setSessionQuery(event.target.value)} placeholder="Search sessions" />
+            <input value={sessionQuery} onChange={(event) => setSessionQuery(event.target.value)} placeholder="Search document chats" />
           </label>
+          {sessionQuery.trim() && (
+            <div className="session-search-meta">
+              <span>{visibleSessions.length} chat{visibleSessions.length === 1 ? "" : "s"} found</span>
+              <button type="button" onClick={() => setSessionQuery("")}>Clear</button>
+            </div>
+          )}
           <div className="session-list">
-            {visibleSessions.map((session) => (
+            {visibleSessions.length > 0 ? visibleSessions.map((session) => (
               <button
                 className={session.id === activeSessionId ? "active" : ""}
                 key={session.title}
@@ -263,7 +269,13 @@ export function Chat() {
                 <span>{session.title}</span>
                 <small>{session.detail}</small>
               </button>
-            ))}
+            )) : (
+              <div className="session-empty-state">
+                <FileSearch size={22} />
+                <strong>No chats found</strong>
+                <small>Try another document name, group, or topic.</small>
+              </div>
+            )}
           </div>
           <div className="chat-guardrail-card session-summary-card">
             <MessageSquareText size={18} />

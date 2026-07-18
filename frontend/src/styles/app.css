@@ -1977,10 +1977,41 @@ td small {
   box-shadow: var(--shadow);
 }
 
+.advanced-session-panel.is-searching {
+  grid-template-rows: auto auto auto minmax(460px, 1fr);
+}
+
+.advanced-session-panel.is-searching .chat-guardrail-card {
+  display: none;
+}
+
 .session-search {
   min-width: 0;
   max-width: none;
   box-shadow: none;
+}
+
+.session-search-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 30px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.session-search-meta button {
+  width: auto;
+  min-height: 28px;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface-soft);
+  color: var(--teal-dark);
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .session-list {
@@ -1993,6 +2024,10 @@ td small {
   padding: 2px 4px 2px 0;
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;
+}
+
+.advanced-session-panel.is-searching .session-list {
+  padding-top: 4px;
 }
 
 .session-list::-webkit-scrollbar {
@@ -2018,8 +2053,12 @@ td small {
 }
 
 .session-list button {
-  min-height: 64px;
+  min-height: 62px;
   align-content: center;
+}
+
+.advanced-session-panel.is-searching .session-list button {
+  min-height: 68px;
 }
 
 .session-panel button span,
@@ -2046,6 +2085,32 @@ td small {
 
 .session-panel button.active {
   box-shadow: inset 4px 0 0 var(--teal);
+}
+
+.session-empty-state {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 6px;
+  padding: 18px;
+  border: 1px dashed var(--line-strong);
+  border-radius: 8px;
+  color: var(--muted);
+  text-align: center;
+  background: var(--surface-soft);
+}
+
+.session-empty-state svg {
+  color: var(--teal);
+}
+
+.session-empty-state strong {
+  color: var(--ink);
+}
+
+.session-empty-state small {
+  color: var(--muted);
 }
 
 .chat-guardrail-card {
