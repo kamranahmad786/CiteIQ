@@ -11,7 +11,7 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173",
         "https://cite-iq.vercel.app",
     ]
-    database_url: str = "postgresql+asyncpg://app:app@localhost:5432/app"
+    database_url: str = "sqlite://"
     jwt_secret: str = "replace-me-in-production"
     access_token_minutes: int = 15
     refresh_token_days: int = 14

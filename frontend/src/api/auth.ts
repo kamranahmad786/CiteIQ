@@ -10,3 +10,7 @@ export async function signup(payload: SignupPayload) {
   const { data } = await api.post<AuthResponse>("/auth/signup", payload);
   return data;
 }
+
+export async function logout(refreshToken: string) {
+  await api.post("/auth/logout", { refresh_token: refreshToken });
+}

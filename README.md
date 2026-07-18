@@ -276,7 +276,10 @@ APP_NAME=CiteIQ
 API_PREFIX=/api
 CORS_ORIGINS=["https://cite-iq.vercel.app"]
 JWT_SECRET=replace-with-a-secure-secret
+DATABASE_URL=postgresql+psycopg://USER:PASSWORD@HOST:5432/DATABASE
 ```
+
+`DATABASE_URL` is required for production login/signup persistence. Without it, local development uses an in-memory SQLite database for easy testing.
 
 ## Docker Setup
 
@@ -320,6 +323,7 @@ APP_NAME=CiteIQ
 API_PREFIX=/api
 CORS_ORIGINS=["https://cite-iq.vercel.app"]
 JWT_SECRET=replace-with-a-secure-secret
+DATABASE_URL=postgresql+psycopg://USER:PASSWORD@HOST:5432/DATABASE
 ```
 
 After deploy, verify:

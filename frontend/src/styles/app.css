@@ -569,6 +569,44 @@ main {
   color: #68c7ad;
 }
 
+.auth-role-panel {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.auth-role-panel > div {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.075);
+}
+
+.auth-role-panel span,
+.auth-access-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.auth-role-panel span {
+  color: #7de0c5;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.auth-role-panel strong {
+  color: #ffffff;
+}
+
+.auth-role-panel small {
+  color: #b7c9c1;
+  line-height: 1.45;
+}
+
 .auth-card {
   padding: 22px;
   background: rgba(16, 35, 31, 0.88);
@@ -626,6 +664,44 @@ main {
 .auth-card form {
   display: grid;
   gap: 15px;
+}
+
+.auth-access-note {
+  align-items: flex-start;
+  padding: 11px 12px;
+  border: 1px solid rgba(125, 224, 197, 0.22);
+  border-radius: 8px;
+  background: rgba(125, 224, 197, 0.08);
+}
+
+.auth-access-note.admin {
+  border-color: rgba(247, 200, 109, 0.28);
+  background: rgba(247, 200, 109, 0.08);
+}
+
+.auth-access-note svg {
+  flex: 0 0 auto;
+  margin-top: 2px;
+  color: #7de0c5;
+}
+
+.auth-access-note.admin svg {
+  color: #f7c86d;
+}
+
+.auth-access-note strong,
+.auth-access-note small {
+  display: block;
+}
+
+.auth-access-note strong {
+  color: #ffffff;
+}
+
+.auth-access-note small {
+  margin-top: 2px;
+  color: #b7c9c1;
+  line-height: 1.42;
 }
 
 .auth-input {
@@ -3329,6 +3405,10 @@ summary {
   }
 
   .auth-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-role-panel {
     grid-template-columns: 1fr;
   }
 

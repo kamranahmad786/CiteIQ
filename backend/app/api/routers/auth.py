@@ -1,26 +1,12 @@
-from uuid import uuid4
-
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.api.deps import get_current_user
 from app.core.config import get_settings
 from app.core.security import build_access_token, build_refresh_token, hash_password, verify_password
+from app.domain.auth.store import auth_store, to_profile
 from app.schemas.api import LoginRequest, LoginResponse, RefreshRequest, SignupRequest, UserProfile
 
 router = APIRouter(prefix="/auth", tags=["auth"])
-
-DEMO_USER = UserProfile(
-    id="11111111-1111-1111-1111-111111111111",
-    email="admin@citeiq.test",
-    name="CiteIQ Admin",
-    roles=["platform_admin", "organisation_admin", "auditor"],
-    organisation="CiteIQ Workspace",
-)
-
-SIGNED_UP_USERS: dict[str, tuple[UserProfile, str]] = {}
-REFRESH_TOKENS: dict[str, str] = {}
-DEMO_PASSWORD_HASH = hash_password("password")
-
 
 def normalize_email(email: str) -> str:
     return email.lower().strip()
@@ -38,15 +24,6 @@ def validate_signup_password(password: str) -> None:
         raise HTTPException(status_code=422, detail="Password must be at least 8 characters and include a letter and a number")
 
 
-def find_user_by_email(email: str) -> tuple[UserProfile, str | None] | None:
-    if email == DEMO_USER.email:
-        return DEMO_USER, DEMO_PASSWORD_HASH
-    signed_up = SIGNED_UP_USERS.get(email)
-    if signed_up:
-        return signed_up[0], signed_up[1]
-    return None
-
-
 def issue_token_pair(user: UserProfile) -> LoginResponse:
     settings = get_settings()
     access_token = build_access_token(
@@ -55,7 +32,7 @@ def issue_token_pair(user: UserProfile) -> LoginResponse:
         settings.access_token_minutes,
     )
     refresh_token = build_refresh_token()
-    REFRESH_TOKENS[refresh_token] = user.email
+    auth_store.save_refresh_token(user.id, refresh_token, settings.refresh_token_days)
     return LoginResponse(
         access_token=access_token,
         refresh_token=refresh_token,
@@ -68,10 +45,11 @@ def issue_token_pair(user: UserProfile) -> LoginResponse:
 def login(payload: LoginRequest) -> LoginResponse:
     normalized_email = normalize_email(payload.email)
     validate_email(normalized_email)
-    user_record = find_user_by_email(normalized_email)
-    if not user_record or not user_record[1] or not verify_password(payload.password, user_record[1]):
+    user = auth_store.find_user(normalized_email)
+    if not user or not verify_password(payload.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-    return issue_token_pair(user_record[0])
+    auth_store.mark_login(user.id)
+    return issue_token_pair(to_profile(user))
 
 
 @router.post("/signup", response_model=LoginResponse)
@@ -79,34 +57,36 @@ def signup(payload: SignupRequest) -> LoginResponse:
     normalized_email = normalize_email(payload.email)
     validate_email(normalized_email)
     validate_signup_password(payload.password)
-    if normalized_email == DEMO_USER.email or normalized_email in SIGNED_UP_USERS:
+    if auth_store.find_user(normalized_email):
         raise HTTPException(status_code=409, detail="Email already exists")
     name = payload.name.strip()
     if len(name) < 2:
         raise HTTPException(status_code=422, detail="Please enter your full name")
-    user = UserProfile(
-        id=str(uuid4()),
+    user = auth_store.create_user(
         email=normalized_email,
         name=name,
-        roles=["standard_user"],
         organisation=payload.organisation.strip() or "CiteIQ Workspace",
+        password_hash=hash_password(payload.password),
+        roles=["standard_user"],
     )
-    SIGNED_UP_USERS[normalized_email] = (user, hash_password(payload.password))
     return issue_token_pair(user)
 
 
 @router.post("/refresh", response_model=LoginResponse)
 def refresh(payload: RefreshRequest) -> LoginResponse:
-    email = REFRESH_TOKENS.pop(payload.refresh_token, None)
-    if not email:
+    user = auth_store.consume_refresh_token(payload.refresh_token)
+    if not user:
         raise HTTPException(status_code=401, detail="Session expired. Please login again")
-    user_record = find_user_by_email(email)
-    if not user_record:
-        raise HTTPException(status_code=401, detail="Session expired. Please login again")
-    return issue_token_pair(user_record[0])
+    return issue_token_pair(user)
+
+
+@router.post("/logout")
+def logout(payload: RefreshRequest) -> dict[str, str]:
+    auth_store.revoke_refresh_token(payload.refresh_token)
+    return {"status": "logged_out"}
 
 
 @router.get("/me", response_model=UserProfile)
 def me(user: UserProfile = Depends(get_current_user)) -> UserProfile:
-    user_record = find_user_by_email(user.email)
-    return user_record[0] if user_record else user
+    user_record = auth_store.find_user(user.email)
+    return to_profile(user_record) if user_record else user

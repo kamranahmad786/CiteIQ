@@ -33,6 +33,7 @@ import { Support } from "./features/support/Support";
 import { AuthPage } from "./features/auth/AuthPage";
 import type { AuthResponse } from "./api/types";
 import { apiBaseURL } from "./api/client";
+import { logout as logoutRequest } from "./api/auth";
 import {
   clearReadNotifications,
   deleteNotification,
@@ -162,6 +163,9 @@ export function App() {
   }
 
   function logout() {
+    if (auth?.refresh_token) {
+      logoutRequest(auth.refresh_token).catch(() => undefined);
+    }
     window.localStorage.removeItem("citeiq.auth");
     setAuth(null);
   }

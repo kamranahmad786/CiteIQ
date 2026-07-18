@@ -40,3 +40,20 @@ def test_signup_then_login_succeeds():
     assert login_response.status_code == 200
     assert login_response.json()["user"]["name"] == "New User"
 
+
+def test_refresh_token_rotates_session():
+    client = TestClient(app)
+    login_response = client.post(
+        "/api/auth/login",
+        json={"email": "admin@citeiq.test", "password": "password"},
+    )
+    refresh_token = login_response.json()["refresh_token"]
+
+    refresh_response = client.post("/api/auth/refresh", json={"refresh_token": refresh_token})
+
+    assert refresh_response.status_code == 200
+    assert refresh_response.json()["access_token"]
+    assert refresh_response.json()["refresh_token"] != refresh_token
+
+    reused_response = client.post("/api/auth/refresh", json={"refresh_token": refresh_token})
+    assert reused_response.status_code == 401

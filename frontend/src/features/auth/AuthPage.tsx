@@ -1,6 +1,6 @@
 import { FormEvent, useState } from "react";
 import axios from "axios";
-import { ArrowRight, CheckCircle2, FileText, LockKeyhole, Mail, ShieldCheck, Sparkles, UserRound } from "lucide-react";
+import { ArrowRight, CheckCircle2, FileText, LockKeyhole, Mail, ShieldCheck, Sparkles, UserRound, Users } from "lucide-react";
 import { login, signup } from "../../api/auth";
 import type { AuthResponse } from "../../api/types";
 
@@ -104,6 +104,18 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
           <span><CheckCircle2 size={16} /> Access based on role</span>
           <span><CheckCircle2 size={16} /> Clear source references</span>
         </div>
+        <div className="auth-role-panel">
+          <div>
+            <span><ShieldCheck size={16} /> Admin access</span>
+            <strong>Full workspace control</strong>
+            <small>Manage users, uploads, reports, settings, and search health.</small>
+          </div>
+          <div>
+            <span><Users size={16} /> Standard user</span>
+            <strong>Safe everyday access</strong>
+            <small>Ask document questions and view allowed company documents.</small>
+          </div>
+        </div>
       </section>
       <section className="auth-card">
         <div className="auth-card-head">
@@ -119,6 +131,23 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
             <span className="eyebrow">{mode === "login" ? "Welcome back" : "Create account"}</span>
             <h2>{mode === "login" ? "Login to CiteIQ" : "Start your workspace"}</h2>
           </div>
+          {mode === "login" ? (
+            <div className="auth-access-note admin">
+              <ShieldCheck size={17} />
+              <div>
+                <strong>Demo admin login</strong>
+                <small>Use the demo account to test full role-based access.</small>
+              </div>
+            </div>
+          ) : (
+            <div className="auth-access-note">
+              <Users size={17} />
+              <div>
+                <strong>New accounts start as standard users</strong>
+                <small>You can ask questions and view allowed documents. Admin can upgrade your role later.</small>
+              </div>
+            </div>
+          )}
           {mode === "signup" && (
             <>
               <label>
