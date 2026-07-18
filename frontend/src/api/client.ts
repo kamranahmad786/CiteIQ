@@ -30,7 +30,16 @@ api.interceptors.response.use(
     const config = error.config as RetriableConfig | undefined;
     if (error.response?.status === 401 && config && !config.__retried) {
       config.__retried = true;
-      await api.post("/auth/refresh");
+      const rawAuth = window.localStorage.getItem("citeiq.auth");
+      if (!rawAuth) {
+        return Promise.reject(error);
+      }
+      const auth = JSON.parse(rawAuth) as { refresh_token?: string };
+      if (!auth.refresh_token) {
+        return Promise.reject(error);
+      }
+      const refreshResponse = await api.post("/auth/refresh", { refresh_token: auth.refresh_token });
+      window.localStorage.setItem("citeiq.auth", JSON.stringify(refreshResponse.data));
       return api.request(config);
     }
     return Promise.reject(error);

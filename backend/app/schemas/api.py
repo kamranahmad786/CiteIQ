@@ -9,8 +9,12 @@ class LoginRequest(BaseModel):
 class SignupRequest(BaseModel):
     name: str = Field(min_length=2)
     email: str
-    password: str = Field(min_length=6)
+    password: str = Field(min_length=8)
     organisation: str = "CiteIQ Workspace"
+
+
+class RefreshRequest(BaseModel):
+    refresh_token: str = Field(min_length=20)
 
 
 class UserProfile(BaseModel):

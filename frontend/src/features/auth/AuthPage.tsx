@@ -11,6 +11,7 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
   const [name, setName] = useState("");
   const [email, setEmail] = useState("admin@citeiq.test");
   const [password, setPassword] = useState("password");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [organisation, setOrganisation] = useState("CiteIQ Workspace");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -24,12 +25,14 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
       setName("");
       setEmail("admin@citeiq.test");
       setPassword("password");
+      setConfirmPassword("");
       setOrganisation("CiteIQ Workspace");
       return;
     }
     setName("");
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
     setOrganisation("CiteIQ Workspace");
   }
 
@@ -45,11 +48,20 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
         return;
       }
       const signupEmail = email.trim();
+      if (password !== confirmPassword) {
+        setError("Passwords do not match.");
+        return;
+      }
+      if (!isStrongPassword(password)) {
+        setError("Password must be at least 8 characters and include a letter and a number.");
+        return;
+      }
       await signup({ name, email: signupEmail, password, organisation });
       setMode("login");
       setName("");
       setEmail(signupEmail);
       setPassword("");
+      setConfirmPassword("");
       setOrganisation("CiteIQ Workspace");
       setSuccess("Account created successfully. Please login to continue.");
     } catch (caught) {
@@ -96,7 +108,7 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
       <section className="auth-card">
         <div className="auth-card-head">
           <span><ShieldCheck size={18} /> Secure workspace access</span>
-          <small>{mode === "login" ? "Use the demo account or your company login." : "Create a demo company user."}</small>
+          <small>{mode === "login" ? "Use the demo account or your company login." : "Create a standard user account. Admin can update access later."}</small>
         </div>
         <div className="auth-tabs">
           <button type="button" className={mode === "login" ? "active" : ""} onClick={() => switchMode("login")}>Login</button>
@@ -125,8 +137,22 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
           </label>
           <label>
             Password
-            <span className="auth-input"><LockKeyhole size={17} /><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} minLength={6} required /></span>
+            <span className="auth-input"><LockKeyhole size={17} /><input type="password" value={password} onChange={(event) => setPassword(event.target.value)} minLength={mode === "signup" ? 8 : 6} required /></span>
           </label>
+          {mode === "signup" && (
+            <>
+              <label>
+                Confirm password
+                <span className="auth-input"><LockKeyhole size={17} /><input type="password" value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)} minLength={8} required /></span>
+              </label>
+              <div className="password-rules">
+                <span className={password.length >= 8 ? "ok" : ""}><CheckCircle2 size={14} /> 8 or more characters</span>
+                <span className={/[A-Za-z]/.test(password) ? "ok" : ""}><CheckCircle2 size={14} /> Includes a letter</span>
+                <span className={/\d/.test(password) ? "ok" : ""}><CheckCircle2 size={14} /> Includes a number</span>
+                <span className={password && password === confirmPassword ? "ok" : ""}><CheckCircle2 size={14} /> Passwords match</span>
+              </div>
+            </>
+          )}
           {error && <p className="auth-error">{error}</p>}
           {success && <p className="auth-success">{success}</p>}
           <button className="primary" disabled={loading}>
@@ -138,4 +164,8 @@ export function AuthPage({ onAuthenticated }: { onAuthenticated: (auth: AuthResp
       </section>
     </main>
   );
+}
+
+function isStrongPassword(password: string) {
+  return password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password);
 }

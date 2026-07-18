@@ -29,13 +29,19 @@ def utcnow() -> datetime:
 
 def hash_password(password: str) -> str:
     if pwd_context:
-        return pwd_context.hash(password)
+        try:
+            return pwd_context.hash(password)
+        except Exception:
+            pass
     return "sha256$" + hashlib.sha256(password.encode("utf-8")).hexdigest()
 
 
 def verify_password(password: str, password_hash: str) -> bool:
     if pwd_context and not password_hash.startswith("sha256$"):
-        return pwd_context.verify(password, password_hash)
+        try:
+            return pwd_context.verify(password, password_hash)
+        except Exception:
+            return False
     return secrets.compare_digest(hash_password(password), password_hash)
 
 
