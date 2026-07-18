@@ -1,0 +1,180 @@
+%----------------------------------------------------------------------------------------
+% DOCUMENT DEFINITION
+%----------------------------------------------------------------------------------------
+\documentclass[a4paper,10pt]{article}
+
+%----------------------------------------------------------------------------------------
+% PACKAGES
+%----------------------------------------------------------------------------------------
+\usepackage[top=0.42in, bottom=0.42in, left=0.7in, right=0.7in]{geometry}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+\usepackage{titlesec}
+\usepackage{xcolor}
+
+%----------------------------------------------------------------------------------------
+% GLOBAL STYLING
+%----------------------------------------------------------------------------------------
+\renewcommand{\familydefault}{\sfdefault}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.15em}
+\setlist[itemize]{noitemsep, topsep=0pt, leftmargin=1.2em}
+\titlespacing*{\section}{0pt}{0.25em}{0.15em}
+\titleformat{\section}{\large\bfseries\uppercase}{}{0em}{}
+
+\definecolor{linkcolour}{rgb}{0,0.2,0.6}
+\hypersetup{colorlinks, urlcolor=linkcolour}
+
+\newcommand{\mysection}[1]{%
+\vspace{2pt}
+\noindent\textbf{\large #1}
+\vspace{1pt}
+\hrule
+\vspace{2pt}
+}
+
+%----------------------------------------------------------------------------------------
+\begin{document}
+\pagestyle{empty}
+
+%----------------------------------------------------------------------------------------
+% HEADER
+%----------------------------------------------------------------------------------------
+\noindent
+\begin{minipage}[t]{\linewidth}
+
+\vspace{2pt}
+
+{\LARGE\textbf{Md Kamran Ahmad}}\\
+
+Full Stack Developer \quad Hyderabad, Telangana, India\\
+
+\href{mailto:k.ahmad2026@gmail.com}{k.ahmad2026@gmail.com} \quad
++91 8789406792\\
+
+\href{https://github.com/kamranahmad786}{github.com/kamranahmad786}
+\quad
+\href{https://www.linkedin.com/in/mdkamranahmad/}{linkedin.com/in/mdkamranahmad}
+\quad
+\href{https://kamverse.vercel.app}{kamverse.vercel.app}\\
+
+\href{https://leetcode.com/u/mohammadkamranahmad786}{leetcode.com/u/mohammadkamranahmad786}
+
+\end{minipage}
+
+\vspace{2pt}
+
+%----------------------------------------------------------------------------------------
+\mysection{PROFESSIONAL SUMMARY}
+Full Stack Developer with hands-on experience building production-ready web applications, RAG-based document intelligence systems, secure authentication, admin dashboards, and responsive product UIs. Skilled in React.js, TypeScript, Node.js, Express.js, FastAPI, Python, MongoDB, REST APIs, and cloud deployment using Vercel and Render. Strong interest in AI-powered applications, scalable backend architecture, PDF/document processing, and performance-focused frontend engineering.
+
+%----------------------------------------------------------------------------------------
+\mysection{EDUCATION}
+\begin{tabularx}{\linewidth}{@{}X r@{}}
+\textbf{Gandhi Engineering College, Bhubaneswar} & 2023 -- 2026 \\
+B.Tech in Computer Science and Engineering & 7.76 CGPA \\
+
+\textbf{Chandil Polytechnic, Chandil} & 2020 -- 2023 \\
+Diploma in Mechanical Engineering & 79.61\% \\
+
+\textbf{Xavier School, Gamharia} & 2018 -- 2019 \\
+Secondary School Education (Class X) & 64.8\% \\
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+\mysection{EXPERIENCE}
+
+\textbf{MERN Stack Developer Intern -- Silan Software Pvt. Ltd.} \hfill Oct 2025 -- Dec 2025
+\begin{itemize}
+\item Engineered frontend modules for SilanPay, a production-grade FinTech payment platform, using React.js and optimized component render time by 35\% via memoization and lazy loading.
+\item Implemented JWT and role-based authentication with protected routes, securing 12+ endpoints across admin, merchant, and user dashboards.
+\item Built transaction workflows and dashboard analytics by integrating Node.js/Express.js REST APIs with MongoDB, tested with 10k+ mock transactions in staging.
+\item Collaborated in an Agile team using Git, resolved 20+ production-grade bugs, and participated in code reviews.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+\mysection{PROJECTS}
+
+\begin{tabularx}{\linewidth}{@{}X r@{}}
+\textbf{CiteIQ -- Enterprise RAG Document Intelligence Platform} &
+\href{https://cite-iq.vercel.app}{Live} \quad
+\href{https://citeiq.onrender.com/docs}{API Docs} \quad
+\href{https://github.com/kamranahmad786/CiteIQ}{GitHub} \\
+\end{tabularx}
+\begin{itemize}
+\item Built an enterprise document intelligence platform using React.js, TypeScript, FastAPI, Python, TanStack Query, and REST APIs for secure document upload, PDF ingestion, and chat-based retrieval.
+\item Implemented PDF text extraction using pypdf, document chunking, local retrieval, citations, document-scoped chat sessions, archive/unarchive, version history, and download workflows.
+\item Designed advanced product-style modules including Dashboard, Documents, Chat, Analytics, Admin, Vector Index, Support, authentication, day/night mode, notifications, and profile controls.
+\item Deployed frontend on Vercel and backend on Render with production CORS configuration and API health/status routes.
+\end{itemize}
+
+\begin{tabularx}{\linewidth}{@{}X r@{}}
+\textbf{EduDisha -- AI Powered Career Guidance Portal} &
+\href{https://edudisha-portal.onrender.com}{Live} \quad
+\href{https://github.com/kamranahmad786/career-guidance-portal}{GitHub} \\
+\end{tabularx}
+\begin{itemize}
+\item Built AI career platform using MERN stack and Gemini API, adopted by 50+ users across 4 roles.
+\item Developed RBAC system with AI quiz generation, mentorship alerts, and analytics dashboard.
+\item Implemented notification system and automated PDF reports using jsPDF.
+\end{itemize}
+
+\begin{tabularx}{\linewidth}{@{}X r@{}}
+\textbf{Personal Portfolio Website} &
+\href{https://kamverse.vercel.app}{Live} \quad
+\href{https://github.com/kamranahmad786/Kamverse}{GitHub} \\
+\end{tabularx}
+\begin{itemize}
+\item Built MERN portfolio with RAG-based chatbot using vector embeddings and document-aware responses.
+\item Implemented dynamic CMS features, responsive UI, and fast API architecture for portfolio content.
+\item Deployed on Vercel with optimized load time and production-ready routing.
+\end{itemize}
+
+\begin{tabularx}{\linewidth}{@{}X r@{}}
+\textbf{MapMend Solution -- Web Platform for Local Businesses} &
+\href{https://mapmendsolution.vercel.app}{Live} \quad
+\href{https://github.com/kamranahmad786/mapmend-solution}{GitHub} \\
+\end{tabularx}
+\begin{itemize}
+\item Developed MERN platform for SEO, performance, lead generation, and local business visibility optimization.
+\item Integrated pricing modules, service pages, and conversion-focused responsive UI.
+\item Built scalable REST APIs using Node.js and Express.js.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+\mysection{SKILLS}
+\begin{tabularx}{\linewidth}{@{}l X@{}}
+\textbf{Frontend:} & React.js, TypeScript, JavaScript, Vite, HTML, CSS, Tailwind CSS, Bootstrap, Responsive UI, Product UI Design \\
+\textbf{Backend:} & Node.js, Express.js, FastAPI, Python, REST APIs, JWT Auth, RBAC, API Integration \\
+\textbf{Database:} & MongoDB, PostgreSQL, MySQL, SQLite, SQL, Basic pgvector Concepts \\
+\textbf{AI/RAG:} & RAG Applications, Document Chunking, PDF Text Extraction, Citations, Local Retrieval, Vector Search Concepts, Gemini API \\
+\textbf{Tools/Cloud:} & Git, GitHub, Postman, VS Code, Render, Vercel, Docker Basics, npm, Uvicorn \\
+\textbf{Core CS:} & Data Structures and Algorithms, OOPs, DBMS, Operating System, Computer Networks, Performance Optimization \\
+\end{tabularx}
+
+%----------------------------------------------------------------------------------------
+\mysection{CERTIFICATIONS}
+\begin{itemize}
+\item \textbf{Industry Ready Certification in Full-Stack Development (MERN)} by Nxtwave, 2025
+\item \textbf{TCS iON Career Edge -- Young Professional}
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+\mysection{POSITIONS OF RESPONSIBILITY}
+\begin{itemize}
+\item Core Organizing Member, College TechFest 2.0 2024, managed 300+ participants.
+\item Participant, Build Bharat AI Hackathon 2025, Andhra University.
+\item Participant, Dark Pattern Buster Hackathon 2023, Ministry of Consumer Affairs.
+\end{itemize}
+
+%----------------------------------------------------------------------------------------
+\mysection{TECHNICAL INTERESTS}
+\begin{itemize}
+\item Full Stack Development, AI-Powered Web Applications, and Scalable Web Architecture
+\item RAG Systems, Document Intelligence, UI Optimization, and Performance Enhancement
+\end{itemize}
+
+\vspace{-10pt}
+
+\end{document}
