@@ -181,6 +181,65 @@ export function Chat() {
         </article>
       </div>
 
+      <section className="chat-inspector chat-inspector-strip">
+        <section className="table-panel chat-mode-card">
+          <div className="inspector-card-head">
+            <span className="eyebrow">Assistant command</span>
+            <span className="live-pill"><span /> Live</span>
+          </div>
+          <h2>{activeSession.title}</h2>
+          <p>{activeSession.mode}</p>
+          <div className="chat-controls side-chat-controls">
+            <label className="chat-filter-select">
+              <Filter size={15} />
+              <select value={assistantFilter} onChange={(event) => setAssistantFilter(event.target.value as (typeof answerFilters)[number])}>
+                {answerFilters.map((filter) => <option key={filter}>{filter}</option>)}
+              </select>
+            </label>
+            <span><CheckCircle2 size={15} /> Citations required</span>
+          </div>
+          <div className="assistant-scope-card">
+            <small>Active filter</small>
+            <strong>{assistantFilter}</strong>
+            <span>Scope: {activeSession.scope}</span>
+          </div>
+        </section>
+
+        <section className="table-panel inspector-quality-card">
+          <div className="inspector-card-head">
+            <span className="eyebrow">Answer quality</span>
+            <span className="score-pill">98%</span>
+          </div>
+          <h2>Retrieval checks</h2>
+          <div className="check-list compact-check-list">
+            <span><CheckCircle2 size={17} /> Citation policy enforced</span>
+            <span><CheckCircle2 size={17} /> Authorised spaces only</span>
+            <span><CheckCircle2 size={17} /> Abstention fallback active</span>
+            <span><Clock3 size={17} /> Human review queue ready</span>
+          </div>
+        </section>
+
+        <section className="table-panel inspector-evidence-card">
+          <div className="inspector-card-head">
+            <span className="eyebrow">Latest evidence</span>
+            <span className="count-pill">{latestAnswer?.citations.length ?? 0} sources</span>
+          </div>
+          <h2>Source snapshot</h2>
+          {latestAnswer && latestAnswer.citations.length > 0 ? (
+            <div className="settings-list compact-evidence-list">
+              {latestAnswer.citations.slice(0, 3).map((citation) => (
+                <span key={citation.chunk_id}>
+                  <strong>{citation.document_title}</strong>
+                  <small>Page {citation.page_start} · score {citation.score}</small>
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="empty">No answer evidence yet.</p>
+          )}
+        </section>
+      </section>
+
       <section className="chat-layout advanced-chat-layout">
         <aside className="session-panel advanced-session-panel">
           <div className="panel-heading">
@@ -302,65 +361,6 @@ export function Chat() {
             </button>
           </form>
         </section>
-
-        <aside className="chat-inspector">
-          <section className="table-panel chat-mode-card">
-            <div className="inspector-card-head">
-              <span className="eyebrow">Assistant command</span>
-              <span className="live-pill"><span /> Live</span>
-            </div>
-            <h2>{activeSession.title}</h2>
-            <p>{activeSession.mode}</p>
-            <div className="chat-controls side-chat-controls">
-              <label className="chat-filter-select">
-                <Filter size={15} />
-                <select value={assistantFilter} onChange={(event) => setAssistantFilter(event.target.value as (typeof answerFilters)[number])}>
-                  {answerFilters.map((filter) => <option key={filter}>{filter}</option>)}
-                </select>
-              </label>
-              <span><CheckCircle2 size={15} /> Citations required</span>
-            </div>
-            <div className="assistant-scope-card">
-              <small>Active filter</small>
-              <strong>{assistantFilter}</strong>
-              <span>Scope: {activeSession.scope}</span>
-            </div>
-          </section>
-
-          <section className="table-panel inspector-quality-card">
-            <div className="inspector-card-head">
-              <span className="eyebrow">Answer quality</span>
-              <span className="score-pill">98%</span>
-            </div>
-            <h2>Retrieval checks</h2>
-            <div className="check-list">
-              <span><CheckCircle2 size={17} /> Citation policy enforced</span>
-              <span><CheckCircle2 size={17} /> Authorised spaces only</span>
-              <span><CheckCircle2 size={17} /> Abstention fallback active</span>
-              <span><Clock3 size={17} /> Human review queue ready</span>
-            </div>
-          </section>
-
-          <section className="table-panel inspector-evidence-card">
-            <div className="inspector-card-head">
-              <span className="eyebrow">Latest evidence</span>
-              <span className="count-pill">{latestAnswer?.citations.length ?? 0} sources</span>
-            </div>
-            <h2>Source snapshot</h2>
-            {latestAnswer && latestAnswer.citations.length > 0 ? (
-              <div className="settings-list">
-                {latestAnswer.citations.slice(0, 3).map((citation) => (
-                  <span key={citation.chunk_id}>
-                    <strong>{citation.document_title}</strong>
-                    <small>Page {citation.page_start} · score {citation.score}</small>
-                  </span>
-                ))}
-              </div>
-            ) : (
-              <p className="empty">No answer evidence yet.</p>
-            )}
-          </section>
-        </aside>
       </section>
     </section>
   );
