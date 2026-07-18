@@ -2,8 +2,10 @@ import axios, { type InternalAxiosRequestConfig } from "axios";
 
 type RetriableConfig = InternalAxiosRequestConfig & { __retried?: boolean };
 
+export const apiBaseURL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/api";
+
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL ?? "http://localhost:8000/api",
+  baseURL: apiBaseURL,
   withCredentials: true,
 });
 

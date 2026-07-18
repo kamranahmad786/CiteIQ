@@ -75,3 +75,14 @@ class CitationResponse(BaseModel):
 class ChatAnswerResponse(BaseModel):
     answer: str
     citations: list[CitationResponse]
+
+
+class NotificationResponse(BaseModel):
+    id: str
+    title: str
+    detail: str
+    level: str
+    category: str
+    created_at: str
+    read: bool = False
+    action_view: str | None = None
